@@ -25,7 +25,10 @@ services:
     # `bash build.sh` rather than `./build.sh`: the executable bit is
     # easily lost on Windows checkouts, and this works either way.
     buildCommand: "bash build.sh"
-    startCommand: "gunicorn config.wsgi:application"
+    # Gunicorn defaults to 127.0.0.1:8000, which Render cannot reach:
+    # "Every Render web service must bind to a port on host 0.0.0.0".
+    # Without this explicit bind the service returns 502.
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --log-file -"
     healthCheckPath: /api/health/
     envVars:
       - key: DATABASE_URL
