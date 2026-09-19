@@ -1,0 +1,20 @@
+# Indiranagar Cambridge School — backend
+# Install:  pip install -r requirements.txt
+# Deploy:   Render / Railway / Fly (see DEPLOY.md)
+
+Django==5.1.15
+djangorestframework==3.17.2
+django-cors-headers==4.9.0
+
+# Postgres driver. psycopg[binary] ships a prebuilt libpq and is what you
+# want on Render. Plain `psycopg` is used locally on platforms with no wheel.
+psycopg[binary]==3.3.6
+
+dj-database-url==3.1.2      # reads DATABASE_URL
+python-dotenv==1.2.3        # reads .env in local dev
+whitenoise==6.12.0          # serves static files without nginx
+gunicorn==26.2.0            # production WSGI server
+requests==2.34.2            # WhatsApp (CallMeBot) calls
+
+# Not required: Pillow. Every upload uses FileField, which needs no image
+# library. Add Pillow only if you switch a field to ImageField.

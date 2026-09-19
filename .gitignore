@@ -1,0 +1,58 @@
+# ============================================================================
+#  Indiranagar Cambridge School — monorepo
+#    icsw/     frontend (React + Vite)   → Vercel
+#    backend/  API + admin (Django)      → Render
+#
+#  Each folder has its own .gitignore too; this one covers shared junk and
+#  acts as a safety net for anything secret.
+# ============================================================================
+
+# ------------------------------------------------------------- secrets
+# Never commit real credentials. The *.example files ARE committed so a new
+# clone knows what to fill in.
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+service-account*.json
+
+# ------------------------------------------------ editors & operating system
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# OneDrive leaves these behind when two machines edit the same file
+*conflicted copy*
+*-Conflict-*
+
+# --------------------------------------------------------------- scratch
+*.log
+logs/
+tmp/
+temp/
+.cache/
+coverage/
+
+# Design sources are large binaries — keep them out of git and share them
+# through Drive. Delete these two lines if you want them versioned.
+*.fig
+*.sketch

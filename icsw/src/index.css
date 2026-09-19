@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Brand palette — the three colours from the brand guidelines.
+     Deep Forest Green  #264130   primary / brand
+     Warm Ochre Brown   #A37541   secondary / accent
+     White              #FFFFFF   background / text
+   Everything else below is a neutral or a tint derived from those.
+------------------------------------------------------------------ */
+@theme {
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-arsenal: "Arsenal", Georgia, serif;
+
+  --color-ink: #264130; /* Deep Forest Green — primary */
+  --color-brand: #a37541; /* Warm Ochre Brown — secondary */
+
+  /* neutrals */
+  --color-body: #333333; /* body copy */
+  --color-muted: #a49c99; /* supporting / meta text */
+  --color-line: #e5e5e5; /* hairlines and card borders */
+  --color-tint: #f1fef3; /* faintest green wash, for chips and wells */
+  --color-chip: #8ca894; /* category chip, a mid tint of the green */
+  --color-success: #e8f5e9; /* confirmation panels */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: var(--color-body);
+    /* Body copy — Arsenal Regular */
+    font-family: var(--font-arsenal);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings — Poppins Bold */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-poppins);
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* 1440px canvas with the 80px gutters from the design, scaled down cleanly */
+  .shell {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 40px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .shell {
+      padding-inline: 80px;
+    }
+  }
+
+  /* Sub heading — Poppins Regular */
+  .subhead {
+    font-family: var(--font-poppins);
+    font-weight: 400;
+  }
+
+  /* dashed "photo frame" wrapper used across every page */
+  .framed {
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px dashed var(--color-ink);
+    overflow: hidden;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-poppins);
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease,
+      background-color 0.18s ease, color 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary {
+    background: var(--color-brand);
+    color: #fff;
+    padding: 14px 30px;
+    box-shadow: 0 10px 24px -10px rgba(38, 65, 48, 0.45);
+  }
+
+  .btn-primary:hover {
+    background: #8f6435; /* Warm Ochre Brown, darkened for hover */
+  }
+
+  .btn-outline {
+    border: 2px solid var(--color-brand);
+    color: var(--color-ink);
+    background: transparent;
+    padding: 12px 28px;
+  }
+
+  .btn-outline:hover {
+    background: rgba(163, 117, 65, 0.1);
+  }
+
+  .btn-dark {
+    background: var(--color-ink);
+    color: #fff;
+    padding: 12px 28px;
+  }
+
+  .btn-dark:hover {
+    background: #1b3123; /* Deep Forest Green, darkened for hover */
+  }
+
+  .field {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    /* white field, ochre on focus — the green wash made every input read
+       as "filled in" before anyone had typed */
+    border: 1px solid var(--color-line);
+    background: #fff;
+    font-family: var(--font-arsenal);
+    font-size: 14px;
+    color: var(--color-ink);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease,
+      background-color 0.18s ease;
+  }
+
+  .field::placeholder {
+    color: var(--color-muted);
+  }
+
+  .field:hover:not(:focus) {
+    border-color: rgba(38, 65, 48, 0.3);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgba(163, 117, 65, 0.15);
+  }
+
+  /* the select keeps a native arrow; give it room and match the others */
+  select.field {
+    cursor: pointer;
+  }
+
+  .field-label {
+    font-family: var(--font-poppins);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid var(--color-line);
+    box-shadow: 0 12px 24px -10px rgba(38, 65, 48, 0.18);
+  }
+
+  .eyebrow {
+    font-family: var(--font-poppins);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+}
+
+/* entrance animation for sections revealed on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* gallery lightbox entrance */
+@keyframes lb-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lb-pop {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

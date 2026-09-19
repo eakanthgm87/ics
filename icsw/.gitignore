@@ -1,0 +1,47 @@
+# ------------------------------------------------------------ dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# ------------------------------------------------------------ build output
+dist/
+dist-ssr/
+build/
+.vite/
+
+# ------------------------------------------------------------------ env
+# VITE_* values are baked into the bundle and are public, but the file still
+# differs per machine. .env.example is committed.
+.env
+.env.*
+!.env.example
+*.local
+
+# ---------------------------------------------------------------- logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --------------------------------------------------------------- editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# --------------------------------------------------------------- testing
+# Playwright is not a project dependency; these appear only if you install it.
+test-results/
+playwright-report/
+playwright/.cache/
+*.png.diff
+
+# Generated artwork IS committed — `npm run gen:images` reproduces it, but
+# committing it means a fresh clone renders without running the generator.

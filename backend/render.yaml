@@ -1,0 +1,34 @@
+# One-click Render blueprint: Postgres + Django API.
+# Deploy the frontend separately on Vercel (see icsw/vercel.json).
+databases:
+  - name: ics-db
+    databaseName: icsw
+    user: icsw
+    plan: free
+
+services:
+  - type: web
+    name: ics-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ics-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DB_SSL_REQUIRE
+        value: "True"
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Set these in the Render dashboard after the first deploy:
+      #   PUBLIC_BASE_URL       https://ics-backend.onrender.com
+      #   CORS_ALLOWED_ORIGINS  https://your-frontend.vercel.app
+      #   EMAIL_HOST_USER / EMAIL_HOST_PASSWORD / NOTIFY_EMAILS
+      #   WHATSAPP_ENABLED / WHATSAPP_PHONE / WHATSAPP_APIKEY

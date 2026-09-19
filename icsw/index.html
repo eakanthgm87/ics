@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon-crest.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The Indiranagar Cambridge School, Bengaluru — a co-educational institution since 1979 offering Nursery through Grade 10 under the Karnataka State Education Board."
+    />
+    <title>The Indiranagar Cambridge School | Bengaluru</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arsenal:wght@400&family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Boot loader. Inline so it paints before the bundle arrives;
+         main.jsx removes it once React has mounted. -->
+    <style>
+      #app-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+      .loader {
+        position: relative;
+        width: 80px;
+        height: 50px;
+      }
+      .loader-text {
+        position: absolute;
+        top: 0;
+        margin: 0;
+        font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #264130;
+        animation: loader-text 3.5s ease both infinite;
+      }
+      .load {
+        position: absolute;
+        bottom: 0;
+        display: block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50px;
+        background: #264130;
+        transform: translateX(64px);
+        animation: loader-bar 3.5s ease both infinite;
+      }
+      .load::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: #a37541;
+        animation: loader-bar-inner 3.5s ease both infinite;
+      }
+      @keyframes loader-text {
+        0%   { letter-spacing: 1px; transform: translateX(0); }
+        40%  { letter-spacing: 2px; transform: translateX(26px); }
+        80%  { letter-spacing: 1px; transform: translateX(32px); }
+        90%  { letter-spacing: 2px; transform: translateX(0); }
+        100% { letter-spacing: 1px; transform: translateX(0); }
+      }
+      @keyframes loader-bar {
+        0%   { width: 16px;  transform: translateX(0); }
+        40%  { width: 100%;  transform: translateX(0); }
+        80%  { width: 16px;  transform: translateX(64px); }
+        90%  { width: 100%;  transform: translateX(0); }
+        100% { width: 16px;  transform: translateX(0); }
+      }
+      @keyframes loader-bar-inner {
+        0%   { width: 16px; transform: translateX(0); }
+        40%  { width: 80%;  transform: translateX(0); }
+        80%  { width: 100%; transform: translateX(0); }
+        90%  { width: 80%;  transform: translateX(15px); }
+        100% { width: 16px; transform: translateX(0); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loader-text, .load, .load::before { animation: none; }
+        .load { width: 80px; transform: none; }
+      }
+    </style>
+    <div id="app-loader" role="status" aria-live="polite">
+      <div class="loader">
+        <p class="loader-text">LOADING</p>
+        <span class="load"></span>
+      </div>
+    </div>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
