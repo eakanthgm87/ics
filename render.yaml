@@ -1,0 +1,85 @@
+# Render Blueprint — deploys the whole project in one go.
+#
+#   Postgres  ics-db          managed database
+#   API       ics-backend     Django web service   (backend/)
+#   Site      ics-frontend    static site          (icsw/)
+#
+# Deploy: push to GitHub, then Render -> New -> Blueprint -> pick this repo.
+#
+# NOTE: this file must sit at the REPOSITORY ROOT (it does). Each service
+# points at its own folder with rootDir.
+
+databases:
+  - name: ics-db
+    databaseName: icsw
+    user: icsw
+    plan: free
+
+services:
+  # ---------------------------------------------------------------- backend
+  - name: ics-backend
+    type: web
+    runtime: python
+    plan: free
+    rootDir: backend
+    # `bash build.sh` rather than `./build.sh`: the executable bit is
+    # easily lost on Windows checkouts, and this works either way.
+    buildCommand: "bash build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    healthCheckPath: /api/health/
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ics-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DB_SSL_REQUIRE
+        value: "True"
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # These need PUBLIC https:// URLs, which do not exist until the
+      # services are created. `sync: false` makes Render prompt for them at
+      # deploy time. (Do NOT use fromService/hostport here: that returns a
+      # PRIVATE network address like "ics-backend:10000", which a browser
+      # cannot reach and which CORS will reject for having no scheme.)
+      #
+      #   PUBLIC_BASE_URL       https://ics-backend.onrender.com
+      #   CORS_ALLOWED_ORIGINS  https://ics-frontend.onrender.com
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      # Set these in the dashboard after the first deploy (they are secrets):
+      #   EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+      #   EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, DEFAULT_FROM_EMAIL, NOTIFY_EMAILS
+      #   WHATSAPP_ENABLED, WHATSAPP_PHONE, WHATSAPP_APIKEY
+
+  # --------------------------------------------------------------- frontend
+  # Static sites are free and, unlike free web services, do not spin down.
+  - name: ics-frontend
+    type: web
+    runtime: static
+    rootDir: icsw
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      # Must be the backend's public URL, e.g.
+      #   https://ics-backend.onrender.com
+      # Vite bakes this into the bundle at BUILD time, so changing it later
+      # requires a redeploy of this service, not just a restart.
+      - key: VITE_API_URL
+        sync: false
+    routes:
+      # SPA fallback so /about survives a refresh. Render checks real files
+      # first, so this does not shadow /assets/*.js the way an unguarded
+      # Vercel rewrite does.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
