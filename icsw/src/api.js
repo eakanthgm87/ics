@@ -10,6 +10,8 @@
  */
 
 import { useEffect, useState } from "react";
+import CONTENT from "./data/content.json";
+import { SCHOOL, SOCIALS } from "./data/site";
 
 export const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
@@ -18,10 +20,19 @@ export const hasApi = Boolean(API_URL);
 
 /* ------------------------------------------------------------------ reads */
 
-async function getJSON(path, { signal } = {}) {
-  const res = await fetch(`${API_URL}/api${path}`, { signal });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-  return res.json();
+/* one request per path per page load, shared by every component asking */
+const cache = new Map();
+
+function getJSON(path) {
+  if (!cache.has(path)) {
+    const req = fetch(`${API_URL}/api${path}`).then((res) => {
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    });
+    req.catch(() => cache.delete(path)); // let a later mount retry
+    cache.set(path, req);
+  }
+  return cache.get(path);
 }
 
 /**
@@ -33,22 +44,58 @@ export function useContent(path, fallback) {
 
   useEffect(() => {
     if (!hasApi) return;
-    const ac = new AbortController();
-    getJSON(path, { signal: ac.signal })
+    let live = true;
+    getJSON(path)
       .then((rows) => {
         // only replace the built-in copy if the backend actually has content
-        if (Array.isArray(rows) ? rows.length : rows) setData(rows);
+        if (live && (Array.isArray(rows) ? rows.length : rows)) setData(rows);
       })
       .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.warn(`Falling back to built-in content for ${path}:`, err.message);
-        }
+        console.warn(`Falling back to built-in content for ${path}:`, err.message);
       });
-    return () => ac.abort();
+    return () => {
+      live = false;
+    };
   }, [path]);
 
   return data;
 }
+
+/**
+ * One block of page copy from /admin → "Page text & images", e.g.
+ * useSection("home-hero") → { eyebrow, title, subtitle, body, quote, img }.
+ * Any field left blank in the admin keeps the built-in text.
+ */
+export function useSection(key) {
+  const all = useContent("/sections/", CONTENT.sections);
+  const base = CONTENT.sections[key] ?? {};
+  const live = all[key] ?? {};
+  const out = { ...base };
+  for (const [k, v] of Object.entries(live)) if (v) out[k] = v;
+  return out;
+}
+
+/** Contact details + social links from /admin → Site settings. */
+export function useSchool() {
+  const s = useContent("/settings/", null);
+  if (!s) return { ...SCHOOL, socials: SOCIALS };
+  return {
+    name: s.name,
+    address: s.address,
+    phone: s.phone,
+    mobile: s.mobile,
+    email: s.email,
+    emailHr: s.email_hr,
+    hoursWeek: s.hours_week,
+    hoursSat: s.hours_sat,
+    mapsUrl: s.maps_url,
+    socials: s.socials,
+  };
+}
+
+/** Split admin text on blank lines into paragraphs. */
+export const paragraphs = (text = "") =>
+  text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 /**
  * The active brochure's URL, falling back to the PDF shipped in public/.
@@ -59,13 +106,11 @@ export function useBrochure(fallback = "/ICS-Brochure.pdf") {
 
   useEffect(() => {
     if (!hasApi) return;
-    const ac = new AbortController();
-    getJSON("/brochure/", { signal: ac.signal })
+    getJSON("/brochure/")
       .then((b) => b?.url && setUrl(b.url))
       .catch(() => {
         /* none uploaded yet — the bundled PDF stands in */
       });
-    return () => ac.abort();
   }, [fallback]);
 
   return url;

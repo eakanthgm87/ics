@@ -11,112 +11,115 @@ const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "ICS-B
 const esc = (s) => s.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
 
 /** [text, font, size, leadingBefore] */
+const head = (t, size = 13, gap = 14) => [[t, "B", size, gap]];
+const gap = (n = 8) => [["", "R", 11, n]];
+/** wrap a paragraph to the page width (Helvetica 11pt ~ 86 chars a line) */
+const para = (text, font = "R", width = 86) => {
+  const lines = [];
+  let line = "";
+  for (const word of text.split(" ")) {
+    if ((line + " " + word).trim().length > width) {
+      lines.push(line);
+      line = word;
+    } else line = (line + " " + word).trim();
+  }
+  lines.push(line);
+  return lines.map((l, i) => [l, font, 11, i ? 4 : 10]);
+};
+const bullets = (items) => items.map((t, i) => [`- ${t}`, "R", 11, i ? 4 : 10]);
+
 const PAGES = [
   [
     ["THE INDIRANAGAR CAMBRIDGE SCHOOL", "B", 20, 0],
-    ["Bengaluru - Established 1979", "R", 12, 10],
-    ["", "R", 12, 8],
-    ["Nurturing Minds Since 1979", "B", 16, 10],
-    [
-      "A co-educational institution offering Nursery through Grade 10 under the",
-      "R", 11, 14,
-    ],
-    [
-      "Karnataka State Education Board, where academic excellence meets holistic",
-      "R", 11, 4,
-    ],
-    ["development.", "R", 11, 4],
-    ["", "R", 11, 10],
-    ["AT A GLANCE", "B", 13, 14],
-    ["Founded ................ 1979", "R", 11, 12],
-    ["Students ............... 1200+", "R", 11, 4],
-    ["Expert faculty ......... 80+", "R", 11, 4],
-    ["Campuses ............... 3", "R", 11, 4],
-    ["Medium of instruction .. English", "R", 11, 4],
-    ["Board .................. Karnataka State (KSEEB)", "R", 11, 4],
-    ["", "R", 11, 10],
-    ["OUR VISION", "B", 13, 14],
-    [
-      "To nurture young minds into passionate global citizens equipped with robust",
-      "R", 11, 12,
-    ],
-    [
-      "ethical values, fearless critical thinking, and creative excellence.",
-      "R", 11, 4,
-    ],
-    ["", "R", 11, 10],
-    ["OUR MISSION", "B", 13, 14],
-    [
-      "World-class education powered by innovative pedagogy, holistic development,",
-      "R", 11, 12,
-    ],
-    [
-      "and a protective, nurturing environment that celebrates human diversity.",
-      "R", 11, 4,
-    ],
+    ["Bengaluru - Established 1979 - Motto: Towards Perfection", "R", 12, 10],
+    ...gap(),
+    ...head("Nurturing Minds Since 1979", 16, 10),
+    ...para(
+      "A co-educational school offering Nursery through Grade 10 under the Karnataka State " +
+        "Education Board, with English as the medium of instruction. What began in 1979 with " +
+        "7 students and 2 teachers in Thippasandra moved to its HAL 3rd Stage campus in 1986 " +
+        "and produced its first Class X batch in 1989."
+    ),
+    ...head("OUR VISION"),
+    ...para("To nurture confident, compassionate and responsible learners for a better future."),
+    ...head("OUR MISSION"),
+    ...para(
+      "To provide a safe, happy and disciplined environment where every child learns, " +
+        "explores, develops skills and grows into a responsible individual."
+    ),
+    ...head("OUR FACULTY"),
+    ...para(
+      "Our teachers are at the heart of our school. With dedication, care and a strong sense " +
+        "of responsibility, they guide every child to learn, grow and become confident " +
+        "individuals, bringing knowledge, values and individual attention together."
+    ),
+    ...para("Dedicated Teachers. Caring Mentors. Inspiring Learners.", "B"),
+    ...head("AWARDS & HONOURS"),
+    ...para(
+      "Every achievement reflects the dedication of our students, teachers and school " +
+        "community - in academics, co-curricular activities, sports, leadership and service."
+    ),
+    ...bullets([
+      "India Top School Awards 2026 - Sustainable & Holistic Growth Programs",
+      "Indian Talent Olympiad 2025-26 - Golden School and Best Principal Award",
+      "JB Nagar Cluster Sports - prizes in 2016-17, 2022-23 and 2024-25",
+      "Address School Health Awards Winner 2019-20; Health Hall of Fame 2018",
+    ]),
   ],
   [
-    ["ACADEMIC PATHWAY", "B", 18, 0],
-    ["", "R", 11, 6],
-    ["Early Years Foundation (Pre-K - Kindergarten)", "B", 12, 12],
-    [
-      "Play-based learning across cognitive, sensory and motor development, with",
-      "R", 11, 10,
-    ],
-    ["thematic story-circles, outdoor games and sensory play modules.", "R", 11, 4],
-    ["", "R", 11, 8],
-    ["Primary Academy (Grades 1 - 4)", "B", 12, 10],
-    [
-      "Inquiry-led pathway building core literacy, bilingual immersion, introductory",
-      "R", 11, 10,
-    ],
-    ["robotics and critical text analysis.", "R", 11, 4],
-    ["", "R", 11, 8],
-    ["Middle School (Grades 5 - 7)", "B", 12, 10],
-    [
-      "Formal physics, chemistry and biology laboratories, mathematical olympiads,",
-      "R", 11, 10,
-    ],
-    ["civic leadership and youth parliament sessions.", "R", 11, 4],
-    ["", "R", 11, 8],
-    ["High School (Grades 8 - 10)", "B", 12, 10],
-    [
-      "Board-exam alignment with continuous mocks, personalised feedback loops and",
-      "R", 11, 10,
-    ],
-    ["career counselling for higher secondary admissions.", "R", 11, 4],
-    ["", "R", 11, 12],
-    ["CAMPUS FACILITIES", "B", 13, 12],
-    ["- FIFA-standard athletic field, synthetic tracks and indoor courts", "R", 11, 12],
-    ["- Separate Physics, Chemistry and Biology laboratories", "R", 11, 4],
-    ["- Central library with 35,000+ volumes and digital catalogues", "R", 11, 4],
-    ["- Acoustic reading rooms for independent study", "R", 11, 4],
-    ["- Multimedia centre with graphics workstations and edit suites", "R", 11, 4],
+    ["LIFE AT ICS", "B", 18, 0],
+    ...head("Academic Pathway", 13, 12),
+    ...bullets([
+      "Early Years Foundation - play-based cognitive, sensory and motor development",
+      "Primary Academy (Grades 1-4) - inquiry-led learning and strong literacy",
+      "Middle School (Grades 5-7) - laboratory sciences and civic leadership",
+      "High School (Grades 8-10) - board-exam preparation and career counselling",
+    ]),
+    ...head("Learning Through Discovery"),
+    ...para(
+      "Our laboratories let students move beyond textbooks through observation, " +
+        "experimentation and practical activities, building curiosity, scientific thinking " +
+        "and problem-solving skills."
+    ),
+    ...para("Explore. Experiment. Discover. Learn.", "B"),
+    ...head("Our Library"),
+    ...para(
+      "A welcoming space where children discover the joy of reading, explore new ideas and " +
+        "develop the habit of learning beyond the classroom - one page at a time."
+    ),
+    ...para("Read. Explore. Imagine. Grow.", "B"),
+    ...head("Sports & Physical Development"),
+    ...para(
+      "Regular physical activities, games and sports events - including the annual Swift " +
+        "inter-house meet - help children build fitness, confidence, resilience, teamwork " +
+        "and a healthy competitive spirit."
+    ),
+    ...para("Play. Participate. Persevere. Excel.", "B"),
   ],
   [
-    ["ADMISSIONS 2025-26", "B", 18, 0],
-    ["", "R", 11, 6],
-    ["The five-step process", "B", 13, 12],
-    ["1. Enquiry - submit an online enquiry or visit the campus office.", "R", 11, 12],
-    ["2. Campus visit - meet our counsellors and explore the facilities.", "R", 11, 5],
-    ["3. Application - complete the registration dossier with academic history.", "R", 11, 5],
-    ["4. Document verification - transfer credentials, transcripts, photo proof.", "R", 11, 5],
-    ["5. Enrollment - secure the seat by paying structural fees on evaluation.", "R", 11, 5],
-    ["", "R", 11, 10],
-    ["Documents required", "B", 13, 12],
-    ["- Government issued birth certificate", "R", 11, 12],
-    ["- Official transfer certificate (TC) from the previous school", "R", 11, 4],
-    ["- Previous year academic marks card / transcripts", "R", 11, 4],
-    ["- Recent passport-sized photographs of the student", "R", 11, 4],
-    ["- Address proof of parent / guardian", "R", 11, 4],
-    ["", "R", 11, 14],
-    ["CONTACT", "B", 13, 12],
-    ["#52, 6th Cross, 8th Main Road, HAL 3rd Stage,", "R", 11, 12],
-    ["Bengaluru, Karnataka 560075, India", "R", 11, 4],
-    ["", "R", 11, 6],
+    ["ADMISSIONS", "B", 18, 0],
+    ...head("The five-step process", 13, 12),
+    ...bullets([
+      "Enquiry - submit an online enquiry or visit the campus office.",
+      "Campus visit - meet our academic counsellors and explore the facilities.",
+      "Application - fill out the registration form with academic history.",
+      "Document verification - transfer certificate, marks card and photo proof.",
+      "Enrollment - secure the seat by paying the fees upon evaluation.",
+    ]),
+    ...head("Documents required"),
+    ...bullets([
+      "Birth certificate",
+      "Transfer certificate (TC) from the previous school",
+      "Previous year marks card / transcripts",
+      "Recent passport-sized photographs of the student",
+      "Address proof of parent / guardian",
+    ]),
+    ...head("CONTACT", 13, 18),
+    ["#52, 6th Cross, 8th Main Rd, HAL 3rd Stage, Bengaluru 560075", "R", 11, 12],
+    ...gap(4),
     ["Main office      080-25215207", "R", 11, 6],
-    ["Admissions       +91 98450 12345", "R", 11, 4],
-    ["Email            info@icsbengaluru.edu.in", "R", 11, 4],
+    ["Admissions       +91 99020 76777", "R", 11, 4],
+    ["Email            indiranagarcambridgeschool@gmail.com", "R", 11, 4],
     ["Office hours     Mon-Fri 8:30 AM - 4:00 PM, Sat 9:00 AM - 12:30 PM", "R", 11, 4],
   ],
 ];
@@ -135,7 +138,7 @@ const contentFor = (lines) => {
   }
   out += `0.64 0.46 0.25 rg\n60 48 ${W - 120} 3 re f\n`;
   out += `0.45 0.45 0.45 rg\nBT /F1 9 Tf 60 32 Td (${esc(
-    "Indiranagar Cambridge School - Bengaluru - www.icsbengaluru.edu.in"
+    "The Indiranagar Cambridge School - Bengaluru - Towards Perfection"
   )}) Tj ET\n`;
   return out;
 };

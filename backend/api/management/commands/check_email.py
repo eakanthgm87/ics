@@ -9,9 +9,13 @@ Reports exactly which setting is wrong rather than a raw SMTP traceback.
 
 import smtplib
 
+import requests
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
+
+from api.notifications import BREVO_URL, recipients
 
 
 class Command(BaseCommand):
@@ -28,7 +32,10 @@ class Command(BaseCommand):
         backend = settings.EMAIL_BACKEND
         user = settings.EMAIL_HOST_USER
         pw = settings.EMAIL_HOST_PASSWORD
-        to = [opts["to"]] if opts["to"] else settings.NOTIFY_EMAILS
+        to = [opts["to"]] if opts["to"] else recipients()
+
+        if settings.BREVO_API_KEY:
+            return self.check_brevo(to)
 
         self.stdout.write("Current configuration")
         self.stdout.write(f"  EMAIL_BACKEND  : {backend}")
@@ -62,7 +69,7 @@ class Command(BaseCommand):
                 )
             )
         if not to:
-            self.stdout.write(bad("NOTIFY_EMAILS is empty. Nobody would be notified."))
+            self.stdout.write(bad("No recipients. Set them in /admin -> Site settings."))
             return
 
         # --- actually send -------------------------------------------------
@@ -100,3 +107,35 @@ class Command(BaseCommand):
             self.stdout.write(ok("\nSent. Check the inbox (and the spam folder)."))
         else:
             self.stdout.write(bad("\nsend_mail reported 0 messages sent."))
+
+    def check_brevo(self, to):
+        self.stdout.write("Brevo API is configured (BREVO_API_KEY is set)")
+        self.stdout.write(f"  Sender     : {settings.DEFAULT_FROM_EMAIL}")
+        self.stdout.write(f"  Recipients : {', '.join(to) if to else '(empty)'}")
+        if not to:
+            self.stdout.write(self.style.ERROR(
+                "No recipients. Set them in /admin -> Site settings."))
+            return
+        res = requests.post(
+            BREVO_URL,
+            json={
+                "sender": {"email": settings.DEFAULT_FROM_EMAIL,
+                           "name": settings.EMAIL_SENDER_NAME},
+                "to": [{"email": e} for e in to],
+                "subject": "[ICS website] Test email",
+                "textContent": "This is a test from the ICS website backend.
+
+"
+                               "If you can read this, form notifications will arrive here.",
+            },
+            headers={"api-key": settings.BREVO_API_KEY, "accept": "application/json"},
+            timeout=10,
+        )
+        if res.ok:
+            self.stdout.write(self.style.SUCCESS(
+                "
+Sent. Check the inbox (and the spam folder)."))
+        else:
+            # Brevo explains itself, e.g. an unverified sender or a bad key
+            self.stdout.write(self.style.ERROR(f"
+Brevo said {res.status_code}: {res.text}"))

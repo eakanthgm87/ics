@@ -13,14 +13,20 @@ from django.conf import settings
 from rest_framework import serializers
 
 from .models import (
+    AcademicStage,
     Admission,
     Award,
     Brochure,
+    Chapter,
     Enquiry,
+    Facility,
     GalleryImage,
+    PageSection,
     Person,
+    Program,
     SiteSettings,
     Stat,
+    StageCard,
 )
 
 
@@ -101,8 +107,18 @@ class AdmissionSerializer(serializers.ModelSerializer):
 # ------------------------------------------------------------ site content
 
 
-class GallerySerializer(serializers.ModelSerializer):
-    src = serializers.SerializerMethodField()
+class ImgMixin:
+    """`img` = absolute URL of the model's `image_field`, or "" when unset."""
+
+    image_field = "image"
+
+    def get_img(self, obj):
+        f = getattr(obj, self.image_field)
+        return absolute(f.url if f else "", self.context.get("request"))
+
+
+class GallerySerializer(ImgMixin, serializers.ModelSerializer):
+    src = serializers.SerializerMethodField(method_name="get_img")
     cat = serializers.CharField(source="category")
     span = serializers.CharField(source="size")
 
@@ -110,21 +126,64 @@ class GallerySerializer(serializers.ModelSerializer):
         model = GalleryImage
         fields = ["id", "src", "title", "caption", "cat", "span"]
 
-    def get_src(self, obj):
-        return absolute(obj.image.url if obj.image else "", self.context.get("request"))
 
-
-class PersonSerializer(serializers.ModelSerializer):
+class PersonSerializer(ImgMixin, serializers.ModelSerializer):
+    image_field = "photo"
     img = serializers.SerializerMethodField()
     dept = serializers.CharField(source="department")
     qual = serializers.CharField(source="qualification")
+    exp = serializers.CharField(source="experience")
 
     class Meta:
         model = Person
-        fields = ["id", "name", "role", "dept", "qual", "bio", "img"]
+        fields = ["id", "name", "role", "dept", "qual", "exp", "bio", "img"]
 
-    def get_img(self, obj):
-        return absolute(obj.photo.url if obj.photo else "", self.context.get("request"))
+
+class PageSectionSerializer(ImgMixin, serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PageSection
+        fields = ["key", "eyebrow", "title", "subtitle", "body", "quote", "img"]
+
+
+class ProgramSerializer(serializers.ModelSerializer):
+    to = serializers.CharField(source="link")
+
+    class Meta:
+        model = Program
+        fields = ["id", "title", "text", "to", "icon"]
+
+
+class FacilitySerializer(ImgMixin, serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Facility
+        fields = ["id", "title", "text", "tagline", "img", "alt"]
+
+
+class StageCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StageCard
+        fields = ["tag", "title", "text"]
+
+
+class AcademicStageSerializer(ImgMixin, serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+    cards = StageCardSerializer(many=True)
+
+    class Meta:
+        model = AcademicStage
+        fields = ["id", "title", "text", "img", "alt", "cards"]
+
+
+class ChapterSerializer(ImgMixin, serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Chapter
+        fields = ["id", "title", "text", "tag", "badge", "img", "alt"]
 
 
 class StatSerializer(serializers.ModelSerializer):
@@ -141,15 +200,12 @@ class StatSerializer(serializers.ModelSerializer):
         return data
 
 
-class AwardSerializer(serializers.ModelSerializer):
+class AwardSerializer(ImgMixin, serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
 
     class Meta:
         model = Award
         fields = ["id", "year", "title", "body", "img"]
-
-    def get_img(self, obj):
-        return absolute(obj.image.url if obj.image else "", self.context.get("request"))
 
 
 class BrochureSerializer(serializers.ModelSerializer):

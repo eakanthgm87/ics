@@ -98,6 +98,7 @@ website creates them.
 | POST | `/api/enquiries/` | Contact form (JSON) |
 | POST | `/api/admissions/` | Registration form (multipart, 2 files) |
 | GET | `/api/gallery/` `/api/people/` `/api/stats/` `/api/awards/` | Content |
+| GET | `/api/sections/` `/api/programs/` `/api/facilities/` `/api/stages/` `/api/chapters/` | Page copy, homepage programmes, Life at ICS, Academics, Founder story |
 | GET | `/api/brochure/` `/api/settings/` `/api/health/` | Brochure, settings, probe |
 
 Validation errors return **400** with field-keyed messages that the React forms
@@ -144,7 +145,8 @@ After the first deploy, set in the dashboard:
 | -------- | ----- |
 | `PUBLIC_BASE_URL` | `https://your-backend.onrender.com` |
 | `CORS_ALLOWED_ORIGINS` | `https://your-frontend.vercel.app` |
-| `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` / `NOTIFY_EMAILS` | Gmail + App Password |
+| `BREVO_API_KEY` / `DEFAULT_FROM_EMAIL` | Brevo email (recipients are set in admin → Site settings) |
+| `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` / `NOTIFY_EMAILS` | Gmail SMTP alternative |
 
 ### Frontend → Vercel
 

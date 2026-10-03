@@ -1,125 +1,178 @@
 """
-Seed the database with the content currently hardcoded in the React frontend,
-so /admin is populated on a fresh install instead of empty.
+Load the website's built-in content into the database so /admin starts
+populated instead of empty.
 
-    python manage.py seed
+    python manage.py seed            # safe to run on every deploy
+    python manage.py seed --reset    # force a full reload of site content
 
-Idempotent: re-running updates the existing rows rather than duplicating them.
-Images are referenced by the filenames already in the frontend's public/images
-folder — staff replace them by uploading real photos in the admin.
+The content lives in icsw/src/data/content.json, the same file the React app
+uses as its fallback, so the two can never drift apart. Images are copied from
+icsw/public.
+
+Staff edits survive: content is only (re)loaded when CONTENT_VERSION is newer
+than the version recorded in Site settings. Bump CONTENT_VERSION whenever
+content.json changes and should replace what is in the database. Form
+submissions (enquiries, admissions) are never touched.
 """
 
+import json
+import re
 from pathlib import Path
 
 from django.core.files import File
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
-from api.models import Award, GalleryImage, Person, SiteSettings, Stat
+from api.models import (
+    AcademicStage,
+    Award,
+    Chapter,
+    Facility,
+    GalleryImage,
+    PageSection,
+    Person,
+    Program,
+    SiteSettings,
+    Stat,
+    StageCard,
+)
 
-# The frontend ships placeholder artwork; copy it in so seeded rows are not
-# blank. Staff replace these by uploading real photos in the admin.
-FRONTEND_IMAGES = Path(__file__).resolve().parents[4] / "icsw" / "public" / "images"
+CONTENT_VERSION = 2
+
+FRONTEND = Path(__file__).resolve().parents[4] / "icsw"
+CONTENT = FRONTEND / "src" / "data" / "content.json"
 
 
-def attach(obj, field_name, filename):
-    """Attach a frontend placeholder to a FileField, if it isn't set already."""
-    field = getattr(obj, field_name)
-    if field:
-        return False
-    src = FRONTEND_IMAGES / filename
-    if not src.exists():
-        return False
-    with src.open("rb") as fh:
-        field.save(filename, File(fh), save=True)
-    return True
-
-GALLERY = [
-    ("School Orchestra", "The senior orchestra rehearsing for the annual concert.", "Events", "tall", "gal-orchestra.svg"),
-    ("Campus Life", "Morning arrivals outside the main academic block.", "Campus", "short", "gal-campus-life.svg"),
-    ("Athletics Meet", "Inter-house track finals on the synthetic running track.", "Sports", "mid", "gal-sports.svg"),
-    ("Central Library", "Quiet study hours in the school library and reading room.", "Academics", "tall", "gal-library.svg"),
-    ("Art Studio", "Grade 6 students at work in the visual arts studio.", "Academics", "short", "gal-art-studio.svg"),
-    ("Science Laboratory", "Practical chemistry session for the middle school.", "Academics", "mid", "gal-science-lab.svg"),
-    ("Debate Club", "Youth parliament mock session in the seminar room.", "Events", "short", "gal-debate.svg"),
-    ("Annual Theatre", "The senior school production on the main stage.", "Events", "tall", "gal-theatre.svg"),
-    ("Heritage Archway", "The original 1986 archway at the HAL 3rd Stage campus.", "Campus", "short", "gal-campus-detail.svg"),
-]
-
-PEOPLE = [
-    ("Science Faculty", "Physics · Chemistry · Biology", "Middle & High School",
-     "Three dedicated laboratories",
-     "Laboratories equipped with the apparatus, instruments and materials needed to run practical work across all three science streams."),
-    ("Mathematics Faculty", "Numeracy & Problem Solving", "Nursery to Grade 10",
-     "KSEEB syllabus",
-     "Builds numeracy from early play-based counting through to board-level problem solving, including Vedic mathematics in the library collection."),
-    ("Languages Faculty", "English · Hindi · Kannada", "Nursery to Grade 10",
-     "English medium of instruction",
-     "Literature in all three languages is stocked in the school library to encourage independent reading and a lifelong passion for books."),
-    ("Computer Faculty", "Digital Literacy", "Computer Laboratory",
-     "Licensed software throughout",
-     "Students get hands-on lab access three times a week, working with educational and office application software on desktop machines."),
-    ("Physical Education", "Sports & Games", "All grades",
-     "Host of the annual Swift meet",
-     "Cricket, kho kho, badminton, chess, kabaddi, throwball and volleyball, culminating in the inter-class and inter-house Swift competitions."),
-]
-
-STATS = [
-    ("Founded", 1979, 2026, "", False, "calendar"),
-    ("Students in 1979", 7, None, "", True, "users"),
-    ("Grades: Nursery to 10", 10, None, "", True, "award"),
-    ("First Class X Batch", 1989, None, "", False, "pin"),
-]
-
-AWARDS = [
-    ("2024-25", "Swift Awards", "Annual inter-house and inter-class sports meet"),
-    ("2023-24", "JB Nagar Cluster Sports", "Inter-school cluster competitions"),
-    ("2019-20", "Healthy School Award", "Recognised for student health and wellbeing"),
-    ("2017-18", "JB Nagar Cluster Sports", "Inter-school cluster competitions"),
-    ("2016-17", "JB Nagar Cluster Sports", "Inter-school cluster competitions"),
-    ("2012-13", "JB Nagar Cluster Sports", "Inter-school cluster competitions"),
-]
+def attach(obj, field_name, public_path):
+    """Copy a file from icsw/public (e.g. "/images/x.jpg") into a FileField."""
+    if not public_path:
+        return
+    src = FRONTEND / "public" / public_path.lstrip("/")
+    if src.exists():
+        with src.open("rb") as fh:
+            getattr(obj, field_name).save(src.name, File(fh), save=True)
 
 
 class Command(BaseCommand):
-    help = "Populate the database with the site's current content."
+    help = "Populate the database with the site's built-in content."
 
-    def handle(self, *args, **options):
-        attached = 0
-        for i, (title, caption, cat, size, filename) in enumerate(GALLERY):
-            obj, _ = GalleryImage.objects.update_or_create(
-                title=title,
-                defaults={"caption": caption, "category": cat, "size": size, "order": i},
-            )
-            attached += attach(obj, "image", filename)
-        self.stdout.write(
-            f"gallery      : {GalleryImage.objects.count()} ({attached} images attached)"
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--reset", action="store_true", help="Reload content even if up to date."
         )
 
-        for i, (name, role, dept, qual, bio) in enumerate(PEOPLE):
-            obj, _ = Person.objects.update_or_create(
-                name=name,
-                defaults={"role": role, "department": dept, "qualification": qual,
-                          "bio": bio, "order": i},
-            )
-            attach(obj, "photo", f"faculty-{i + 1}.svg")
-        self.stdout.write(f"people       : {Person.objects.count()}")
+    def handle(self, *args, reset=False, **options):
+        settings = SiteSettings.load()
+        if settings.content_version >= CONTENT_VERSION and not reset:
+            self.stdout.write("Content is up to date; leaving staff edits alone.")
+        else:
+            data = json.loads(CONTENT.read_text(encoding="utf-8"))
+            with transaction.atomic():
+                self.load(data)
+                self.load_settings(settings)
+            self.stdout.write(self.style.SUCCESS(f"Seeded content version {CONTENT_VERSION}."))
+        self.restore_missing()
 
-        for i, (label, value, cfrom, suffix, grouped, icon) in enumerate(STATS):
-            Stat.objects.update_or_create(
-                label=label,
-                defaults={"value": value, "count_from": cfrom, "suffix": suffix,
-                          "grouped": grouped, "icon": icon, "order": i},
-            )
-        self.stdout.write(f"stats        : {Stat.objects.count()}")
+    def restore_missing(self):
+        """
+        Hosts like Render rebuild from a fresh checkout, so media/ starts empty
+        on every deploy while the database still points at the files. Put back
+        any file that came from icsw/public. (Files staff uploaded themselves
+        cannot be recovered this way; they need persistent storage.)
+        """
+        bundled = {p.name: p for p in (FRONTEND / "public" / "images").rglob("*") if p.is_file()}
+        fields = [(PageSection, "image"), (GalleryImage, "image"), (Person, "photo"),
+                  (Award, "image"), (Facility, "image"), (AcademicStage, "image"),
+                  (Chapter, "image")]
+        restored = missing = 0
+        for model, name in fields:
+            for obj in model.objects.exclude(**{name: ""}):
+                f = getattr(obj, name)
+                if f.storage.exists(f.name):
+                    continue
+                base = Path(f.name).name
+                # Django adds "_abc1234" when a name was taken; try without it
+                src = bundled.get(base) or bundled.get(
+                    re.sub(r"_[A-Za-z0-9]{7}(\.\w+)$", r"\1", base))
+                if src:
+                    with src.open("rb") as fh:
+                        f.storage.save(f.name, File(fh))
+                    restored += 1
+                else:
+                    missing += 1
+        if restored or missing:
+            self.stdout.write(f"media        : {restored} restored, {missing} uploads missing")
 
-        for i, (year, title, body) in enumerate(AWARDS):
-            obj, _ = Award.objects.update_or_create(
-                year=year, title=title, defaults={"body": body, "order": i},
-            )
-            attach(obj, "image", f"award-{(i % 4) + 1}.svg")
-        self.stdout.write(f"awards       : {Award.objects.count()}")
+    def load(self, data):
+        for model in (PageSection, GalleryImage, Person, Stat, Award, Program,
+                      Facility, AcademicStage, Chapter):
+            model.objects.all().delete()
 
-        s = SiteSettings.load()
+        for key, s in data["sections"].items():
+            obj = PageSection.objects.create(
+                key=key, label=s["label"], eyebrow=s.get("eyebrow", ""),
+                title=s.get("title", ""), subtitle=s.get("subtitle", ""),
+                body=s.get("body", ""), quote=s.get("quote", ""),
+            )
+            attach(obj, "image", s.get("img"))
+
+        for i, g in enumerate(data["gallery"]):
+            obj = GalleryImage.objects.create(
+                title=g["title"], caption=g["caption"], category=g["cat"],
+                size=g["span"], order=i,
+            )
+            attach(obj, "image", g["src"])
+
+        for i, p in enumerate(data["people"]):
+            obj = Person.objects.create(
+                name=p["name"], role=p["role"], department=p.get("dept", ""),
+                qualification=p.get("qual", ""), experience=p.get("exp", ""),
+                bio=p.get("bio", ""), order=i,
+            )
+            attach(obj, "photo", p.get("img"))
+
+        for i, s in enumerate(data["stats"]):
+            Stat.objects.create(
+                label=s["label"], value=s["to"], count_from=s.get("from"),
+                grouped=s.get("grouped", True), icon=s["icon"], order=i,
+            )
+
+        for i, a in enumerate(data["awards"]):
+            obj = Award.objects.create(year=a["year"], title=a["title"],
+                                       body=a.get("body", ""), order=i)
+            attach(obj, "image", a.get("img"))
+
+        for i, p in enumerate(data["programs"]):
+            Program.objects.create(title=p["title"], text=p["text"], link=p["to"],
+                                   icon=p["icon"], order=i)
+
+        for i, f in enumerate(data["facilities"]):
+            obj = Facility.objects.create(
+                title=f["title"], text=f.get("text", ""), tagline=f.get("tagline", ""),
+                alt=f.get("alt", ""), order=i,
+            )
+            attach(obj, "image", f.get("img"))
+
+        for i, s in enumerate(data["stages"]):
+            obj = AcademicStage.objects.create(title=s["title"], text=s["text"],
+                                               alt=s.get("alt", ""), order=i)
+            attach(obj, "image", s.get("img"))
+            for j, c in enumerate(s["cards"]):
+                StageCard.objects.create(stage=obj, order=j, **c)
+
+        for i, c in enumerate(data["chapters"]):
+            obj = Chapter.objects.create(
+                title=c["title"], text=c["text"], tag=c.get("tag", ""),
+                badge=c.get("badge", ""), alt=c.get("alt", ""), order=i,
+            )
+            attach(obj, "image", c.get("img"))
+
+        for model in (PageSection, GalleryImage, Person, Award, Facility,
+                      AcademicStage, Chapter):
+            self.stdout.write(f"  {model._meta.verbose_name_plural:<22}: "
+                              f"{model.objects.count()}")
+
+    def load_settings(self, s):
         s.name = "Indiranagar Cambridge School"
         s.address = "#52, 6th Cross, 8th Main Rd, HAL 3rd Stage, Bengaluru 560075"
         s.phone = "080-25215207"
@@ -129,8 +182,8 @@ class Command(BaseCommand):
         s.hours_week = "Mon - Fri: 8:30 AM to 4:00 PM"
         s.hours_sat = "Sat: 9:00 AM to 12:30 PM"
         s.maps_url = "https://maps.app.goo.gl/pdQwJhK4u2YYb8Lv6"
+        s.facebook = s.facebook or "https://www.facebook.com/p/The-Indiranagar-cambridge-school-100066308185320/"
         s.whatsapp = "https://wa.me/919902076777"
+        s.notify_emails = s.notify_emails or "indiranagarcambridgeschool@gmail.com"
+        s.content_version = CONTENT_VERSION
         s.save()
-        self.stdout.write("site settings: saved")
-
-        self.stdout.write(self.style.SUCCESS("Seed complete."))

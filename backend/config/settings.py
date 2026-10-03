@@ -139,9 +139,10 @@ CORS_ALLOW_CREDENTIALS = False  # no cookies are used by the public API
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
-    "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-    ],
+    # Content reads are not throttled: every page view makes several of them,
+    # and a throttled read silently drops the site back to its built-in copy,
+    # hiding staff edits. Only the two public forms are throttled (FormThrottle).
+    "DEFAULT_THROTTLE_CLASSES": [],
     # public, unauthenticated forms — keep the spam ceiling low
     "DEFAULT_THROTTLE_RATES": {
         "anon": os.getenv("THROTTLE_ANON", "60/hour"),
@@ -164,7 +165,14 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "noreply@ics.edu")
 
-# Where form notifications are sent (comma-separated)
+# Brevo (https://www.brevo.com) — when the key is set, notifications go through
+# Brevo's HTTPS API instead of EMAIL_BACKEND. DEFAULT_FROM_EMAIL must be a sender
+# verified in Brevo (Senders, Domains & Dedicated IPs → Senders).
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+EMAIL_SENDER_NAME = os.getenv("EMAIL_SENDER_NAME", "Indiranagar Cambridge School")
+
+# Fallback recipients (comma-separated). Staff normally set these in
+# /admin → Site settings → "Send form submissions to", which takes priority.
 NOTIFY_EMAILS = env_list("NOTIFY_EMAILS", EMAIL_HOST_USER)
 
 # --------------------------------------------------------------- WhatsApp

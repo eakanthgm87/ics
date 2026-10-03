@@ -3,7 +3,8 @@ Data model for the Indiranagar Cambridge School site.
 
 Two groups:
   1. Submissions  — Enquiry, Admission (written by the public forms)
-  2. Site content — GalleryImage, Person, Stat, Award, Brochure, SiteSettings
+  2. Site content — PageSection, GalleryImage, Person, Stat, Award, Program,
+                    Facility, AcademicStage, Chapter, Brochure, SiteSettings
                     (edited by staff in /admin, read by the frontend)
 
 FileField is used rather than ImageField throughout: ImageField requires
@@ -177,22 +178,23 @@ class GalleryImage(Ordered, TimeStamped):
 
 
 class Person(Ordered, TimeStamped):
-    """A card in the About page "Our People" carousel."""
+    """A card in the About page "Our Faculty" strip."""
 
-    name = models.CharField(max_length=80, help_text='e.g. "Science Faculty" or a name.')
-    role = models.CharField(max_length=80, help_text="Shown in bold under the name.")
+    name = models.CharField(max_length=80)
+    role = models.CharField(max_length=80, help_text="Designation, e.g. \"Hindi Educator\".")
     department = models.CharField(max_length=80, blank=True)
-    qualification = models.CharField(
-        max_length=120, blank=True, help_text="Shown beside the accent rule."
-    )
+    qualification = models.CharField(max_length=160, blank=True)
+    experience = models.CharField(max_length=40, blank=True, help_text='e.g. "10+ Years"')
     bio = models.TextField(
-        max_length=400, blank=True, help_text="Revealed when the card is clicked."
+        blank=True,
+        help_text="Shown in the popup when the card is clicked. "
+        "Leave a blank line between paragraphs.",
     )
     photo = models.FileField(
         upload_to="people/",
         blank=True,
         validators=[FileExtensionValidator(IMAGE_EXT)],
-        help_text="Portrait. Roughly 4:3 works best.",
+        help_text="Portrait photo.",
     )
 
     class Meta(Ordered.Meta):
@@ -237,12 +239,12 @@ class Stat(Ordered, TimeStamped):
 
 
 class Award(Ordered, TimeStamped):
-    """A card in the About page "Awards & Honors" carousel."""
+    """A card in the About page "Awards & Honours" carousel."""
 
     year = models.CharField(max_length=20, help_text='e.g. "2024-25"')
     title = models.CharField(max_length=80)
     body = models.CharField(
-        max_length=120, blank=True, help_text="The awarding body or event."
+        max_length=200, blank=True, help_text="The awarding body or event."
     )
     image = models.FileField(
         upload_to="awards/",
@@ -252,6 +254,115 @@ class Award(Ordered, TimeStamped):
 
     def __str__(self):
         return f"{self.year} — {self.title}"
+
+
+class PageSection(TimeStamped):
+    """
+    One block of page copy (a hero banner, an intro, the founder bio...).
+    The rows are created by `manage.py seed`; staff edit them, they never add
+    new ones, because each key is wired to a fixed place on the site.
+    A blank field falls back to the website's built-in text.
+    """
+
+    key = models.SlugField(unique=True, help_text="Where this appears. Do not change.")
+    label = models.CharField(max_length=80, help_text="Which page and section this is.")
+    eyebrow = models.CharField(
+        max_length=120, blank=True, help_text="Small text above the title (badge / name)."
+    )
+    title = models.CharField(max_length=160, blank=True)
+    subtitle = models.CharField(
+        max_length=200, blank=True, help_text="Line under the title, or a tagline."
+    )
+    body = models.TextField(blank=True, help_text="Leave a blank line between paragraphs.")
+    quote = models.CharField(max_length=300, blank=True)
+    image = models.FileField(
+        upload_to="sections/", blank=True, validators=[FileExtensionValidator(IMAGE_EXT)]
+    )
+
+    class Meta:
+        ordering = ["label"]
+        verbose_name = "Page text & image"
+        verbose_name_plural = "Page text & images"
+
+    def __str__(self):
+        return self.label
+
+
+class Program(Ordered, TimeStamped):
+    """A card in the homepage "Academic Programs" row."""
+
+    ICONS = [("flask", "Science flask"), ("palette", "Arts palette"),
+             ("award", "Award"), ("users", "People")]
+
+    title = models.CharField(max_length=80)
+    text = models.CharField(max_length=300)
+    link = models.CharField(max_length=100, default="/academics",
+                            help_text='Page it links to, e.g. "/academics".')
+    icon = models.CharField(max_length=20, choices=ICONS, default="flask")
+
+    def __str__(self):
+        return self.title
+
+
+class Facility(Ordered, TimeStamped):
+    """A section on the Life at ICS page (sports, library, labs...)."""
+
+    title = models.CharField(max_length=80)
+    text = models.TextField(
+        blank=True, help_text="Leave a blank line between paragraphs. "
+        "Leave empty to show only the title and photo."
+    )
+    tagline = models.CharField(max_length=120, blank=True, help_text="Bold closing line.")
+    image = models.FileField(
+        upload_to="facilities/", blank=True, validators=[FileExtensionValidator(IMAGE_EXT)]
+    )
+    alt = models.CharField("Image description", max_length=150, blank=True)
+
+    class Meta(Ordered.Meta):
+        verbose_name_plural = "Facilities"
+
+    def __str__(self):
+        return self.title
+
+
+class AcademicStage(Ordered, TimeStamped):
+    """A stage on the Academics page, with its two highlight cards."""
+
+    title = models.CharField(max_length=80)
+    text = models.TextField()
+    image = models.FileField(
+        upload_to="academics/", blank=True, validators=[FileExtensionValidator(IMAGE_EXT)]
+    )
+    alt = models.CharField("Image description", max_length=150, blank=True)
+
+    def __str__(self):
+        return self.title
+
+
+class StageCard(Ordered):
+    stage = models.ForeignKey(AcademicStage, related_name="cards", on_delete=models.CASCADE)
+    tag = models.CharField(max_length=40, help_text='e.g. "Grades 1-2"')
+    title = models.CharField(max_length=80)
+    text = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.title
+
+
+class Chapter(Ordered, TimeStamped):
+    """A chapter on the Founder Story page."""
+
+    title = models.CharField(max_length=120)
+    text = models.TextField()
+    tag = models.CharField(max_length=40, blank=True, help_text='Outlined label, e.g. "1986".')
+    badge = models.CharField(max_length=40, blank=True, help_text='Solid label, e.g. "TODAY".')
+    image = models.FileField(
+        upload_to="chapters/", blank=True, validators=[FileExtensionValidator(IMAGE_EXT)]
+    )
+    alt = models.CharField("Image description", max_length=150, blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 class Brochure(TimeStamped):
@@ -297,6 +408,16 @@ class SiteSettings(TimeStamped):
     youtube = models.URLField(max_length=200, blank=True)
     linkedin = models.URLField(max_length=200, blank=True)
     whatsapp = models.URLField(max_length=200, blank=True)
+
+    notify_emails = models.CharField(
+        "Send form submissions to",
+        max_length=500,
+        blank=True,
+        help_text="Admission and contact form submissions are emailed here. "
+        "Separate several addresses with commas.",
+    )
+    # bumped by `manage.py seed` when the built-in content changes
+    content_version = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:
         verbose_name = "Site settings"

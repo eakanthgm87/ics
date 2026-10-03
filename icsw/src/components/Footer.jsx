@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
-import { FOOTER_LINKS, SCHOOL, SOCIALS } from "../data/site";
+import { FOOTER_LINKS } from "../data/site";
+import { useSchool, useSection } from "../api";
 import { SocialIcon } from "./Icons";
 
 export default function Footer() {
+  const SCHOOL = useSchool();
+  const footer = useSection("footer");
+
   return (
     <footer className="bg-ink pt-14 pb-5 text-white">
       <div className="shell flex flex-col gap-10">
@@ -18,8 +22,7 @@ export default function Footer() {
               />
             </Link>
             <p className="font-arsenal text-sm text-white/80">
-              Empowering students to think critically, lead with empathy, and design
-              a purposeful tomorrow on the global stage.
+              {footer.body}
             </p>
           </div>
 
@@ -67,7 +70,7 @@ export default function Footer() {
             Connect with us
           </p>
           <div className="flex flex-wrap items-center gap-4">
-            {SOCIALS.map((s) => (
+            {SCHOOL.socials.map((s) => (
               <a
                 key={s.name}
                 href={s.href}

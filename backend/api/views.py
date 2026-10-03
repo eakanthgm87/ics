@@ -12,15 +12,32 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 
-from .models import Award, Brochure, GalleryImage, Person, SiteSettings, Stat
+from .models import (
+    AcademicStage,
+    Award,
+    Brochure,
+    Chapter,
+    Facility,
+    GalleryImage,
+    PageSection,
+    Person,
+    Program,
+    SiteSettings,
+    Stat,
+)
 from .notifications import notify_admission, notify_enquiry
 from .serializers import (
+    AcademicStageSerializer,
     AdmissionSerializer,
     AwardSerializer,
     BrochureSerializer,
+    ChapterSerializer,
     EnquirySerializer,
+    FacilitySerializer,
     GallerySerializer,
+    PageSectionSerializer,
     PersonSerializer,
+    ProgramSerializer,
     SiteSettingsSerializer,
     StatSerializer,
 )
@@ -101,6 +118,35 @@ class StatList(generics.ListAPIView):
 class AwardList(generics.ListAPIView):
     serializer_class = AwardSerializer
     queryset = Award.objects.filter(is_published=True)
+
+
+class ProgramList(generics.ListAPIView):
+    serializer_class = ProgramSerializer
+    queryset = Program.objects.filter(is_published=True)
+
+
+class FacilityList(generics.ListAPIView):
+    serializer_class = FacilitySerializer
+    queryset = Facility.objects.filter(is_published=True)
+
+
+class StageList(generics.ListAPIView):
+    serializer_class = AcademicStageSerializer
+    queryset = AcademicStage.objects.filter(is_published=True).prefetch_related("cards")
+
+
+class ChapterList(generics.ListAPIView):
+    serializer_class = ChapterSerializer
+    queryset = Chapter.objects.filter(is_published=True)
+
+
+@api_view(["GET"])
+def sections(request):
+    """All page copy, keyed by section: {"home-hero": {...}, ...}."""
+    rows = PageSectionSerializer(
+        PageSection.objects.all(), many=True, context={"request": request}
+    ).data
+    return Response({r.pop("key"): r for r in rows})
 
 
 @api_view(["GET"])

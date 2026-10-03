@@ -29,9 +29,9 @@ export const FOOTER_LINKS = [
 ];
 
 export const SOCIALS = [
-  { name: "Facebook", href: "https://facebook.com/" },
-  { name: "Instagram", href: "https://instagram.com/" },
-  { name: "YouTube", href: "https://youtube.com/" },
-  { name: "LinkedIn", href: "https://linkedin.com/" },
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/p/The-Indiranagar-cambridge-school-100066308185320/",
+  },
   { name: "WhatsApp", href: "https://wa.me/919902076777" },
 ];

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { submitEnquiry } from "../api";
+import { submitEnquiry, useSchool, useSection } from "../api";
 import { HeroBanner, Reveal } from "../components/common";
 import {
   IconCheck,
@@ -8,33 +8,6 @@ import {
   IconMobile,
   IconPhone,
 } from "../components/Icons";
-import { SCHOOL } from "../data/site";
-
-const DIRECTORY = [
-  {
-    icon: IconPhone,
-    label: "Main Office Landline",
-    value: SCHOOL.phone,
-    href: `tel:${SCHOOL.phone.replace(/[^0-9+]/g, "")}`,
-  },
-  {
-    icon: IconMobile,
-    label: "Admissions Inquiry Mobile",
-    value: SCHOOL.mobile,
-    href: `tel:${SCHOOL.mobile.replace(/[^0-9+]/g, "")}`,
-  },
-  {
-    icon: IconMail,
-    label: "Email Support",
-    value: SCHOOL.email,
-    href: `mailto:${SCHOOL.email}`,
-  },
-  {
-    icon: IconClock,
-    label: "Administrative Hours",
-    value: `${SCHOOL.hoursWeek}\n${SCHOOL.hoursSat}`,
-  },
-];
 
 const SUBJECTS = [
   "Admissions & Registration",
@@ -48,6 +21,33 @@ const SUBJECTS = [
 const EMPTY = { name: "", email: "", phone: "", subject: "", message: "" };
 
 export default function Contact() {
+  const SCHOOL = useSchool();
+  const hero = useSection("contact-hero");
+  const DIRECTORY = [
+    {
+      icon: IconPhone,
+      label: "Main Office Landline",
+      value: SCHOOL.phone,
+      href: `tel:${SCHOOL.phone.replace(/[^0-9+]/g, "")}`,
+    },
+    {
+      icon: IconMobile,
+      label: "Admissions Inquiry Mobile",
+      value: SCHOOL.mobile,
+      href: `tel:${SCHOOL.mobile.replace(/[^0-9+]/g, "")}`,
+    },
+    {
+      icon: IconMail,
+      label: "Email Support",
+      value: SCHOOL.email,
+      href: `mailto:${SCHOOL.email}`,
+    },
+    {
+      icon: IconClock,
+      label: "Administrative Hours",
+      value: `${SCHOOL.hoursWeek}\n${SCHOOL.hoursSat}`,
+    },
+  ];
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
@@ -125,12 +125,12 @@ export default function Contact() {
       <section className="bg-white py-10 lg:py-20">
         <div className="shell">
           <HeroBanner
-            image="/images/hero-contact.svg"
-            badge="Get in touch"
+            image={hero.img}
+            badge={hero.eyebrow}
             align="center"
-            title="Connect with Indiranagar Cambridge School"
+            title={hero.title}
             height="min-h-[260px] sm:min-h-[300px] lg:min-h-[320px]"
-            text="We are happy to answer your questions about classes, curriculum steps, or virtual tours. Reach out directly."
+            text={hero.body}
           />
         </div>
       </section>

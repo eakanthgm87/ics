@@ -47,7 +47,12 @@ Then point the frontend at it: put `VITE_API_URL=http://127.0.0.1:8000` in
 | GET | `/api/gallery/` | Gallery photos |
 | GET | `/api/people/` | "Our People" cards |
 | GET | `/api/stats/` | Homepage counter tiles |
-| GET | `/api/awards/` | Awards & Honors |
+| GET | `/api/awards/` | Awards & Honours |
+| GET | `/api/sections/` | All page copy (heroes, intros, founder, principal, vision…), keyed by section |
+| GET | `/api/programs/` | Homepage programme cards |
+| GET | `/api/facilities/` | Life at ICS sections |
+| GET | `/api/stages/` | Academics stages with their cards |
+| GET | `/api/chapters/` | Founder story chapters |
 | GET | `/api/brochure/` | Active brochure (404 if none uploaded) |
 | GET | `/api/settings/` | Address, phone, email, socials |
 | GET | `/api/health/` | Uptime probe |
@@ -127,7 +132,8 @@ you'd need the paid WhatsApp Business API.
 | `PUBLIC_BASE_URL` | `https://ics-backend.onrender.com` |
 | `CORS_ALLOWED_ORIGINS` | `https://your-frontend.vercel.app` |
 | `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` | Gmail + App Password |
-| `NOTIFY_EMAILS` | who receives submissions |
+| `BREVO_API_KEY` | send notifications through Brevo's API (recommended) |
+| `NOTIFY_EMAILS` | fallback recipients; normally set in admin → Site settings |
 | `WHATSAPP_ENABLED` / `WHATSAPP_PHONE` / `WHATSAPP_APIKEY` | optional |
 
 4. Create the admin user from the Render shell:

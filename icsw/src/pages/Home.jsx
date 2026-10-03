@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CountUp, DoodleLayer, HeroBanner, Reveal } from "../components/common";
-import { useBrochure, useContent } from "../api";
+import { useBrochure, useContent, useSection } from "../api";
+import CONTENT from "../data/content.json";
 import {
   IconArrowRight,
   IconAward,
@@ -12,7 +13,7 @@ import {
 } from "../components/Icons";
 
 /* The API sends an icon *name*; map it to the component. */
-const STAT_ICONS = {
+const ICONS = {
   calendar: IconCalendar,
   users: IconUsers,
   award: IconAward,
@@ -21,34 +22,13 @@ const STAT_ICONS = {
   palette: IconPalette,
 };
 
-/* `from` lets the founding year count down from the present day while the
-   rest of the tiles count up from zero. */
-/* Only figures the school itself publishes. Student/staff counts are not
-   published anywhere, so they are deliberately absent. */
-const FALLBACK_STATS = [
-  { icon: IconCalendar, to: 1979, from: 2026, grouped: false, label: "Founded" },
-  { icon: IconUsers, to: 7, label: "Students in 1979" },
-  { icon: IconAward, to: 10, label: "Grades: Nursery to 10" },
-  { icon: IconPin, to: 1989, grouped: false, label: "First Class X Batch" },
-];
-
-const PROGRAMS = [
-  {
-    icon: IconFlask,
-    title: "STEM Excellence",
-    text: "Hands-on science, tech, engineering, and math - designed to spark wonder and real-world problem-solving.",
-    to: "/academics",
-  },
-  {
-    icon: IconPalette,
-    title: "Arts & Creativity",
-    text: "Music, art, drama, and imagination - nurturing self-expression and creative confidence.",
-    to: "/life-at-ics",
-  },
-];
-
 export default function Home() {
-  const STATS = useContent("/stats/", FALLBACK_STATS);
+  /* `from` lets the founding year count down from the present day while the
+     rest of the tiles count up from zero. */
+  const STATS = useContent("/stats/", CONTENT.stats);
+  const PROGRAMS = useContent("/programs/", CONTENT.programs);
+  const hero = useSection("home-hero");
+  const cta = useSection("home-cta");
   const brochure = useBrochure();
 
   return (
@@ -57,11 +37,11 @@ export default function Home() {
       <section className="bg-white py-10 lg:py-20">
         <div className="shell">
           <HeroBanner
-            image="/images/hero-campus.svg"
-            badge="Admissions open 2025–26"
+            image={hero.img}
+            badge={hero.eyebrow}
             seal
-            title="Nurturing Minds Since 1979"
-            text="Welcome to Indiranagar Cambridge School — a co-educational institution offering Nursery through Grade 10 under the Karnataka State Education Board, where academic excellence meets holistic development."
+            title={hero.title}
+            text={hero.body}
           >
             <div className="mt-2 flex flex-wrap items-center gap-4">
               <Link to="/admissions#registration" className="btn btn-primary">
@@ -84,7 +64,7 @@ export default function Home() {
       <section className="bg-white pb-12 lg:pb-20">
         <div className="shell grid grid-cols-2 gap-5 lg:grid-cols-4 lg:gap-8">
           {STATS.map(({ icon, to, from, suffix, grouped, label }, i) => {
-            const Icon = STAT_ICONS[icon] ?? IconAward;
+            const Icon = ICONS[icon] ?? IconAward;
             return (
             <Reveal
               key={label}
@@ -125,7 +105,9 @@ export default function Home() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            {PROGRAMS.map(({ icon: Icon, title, text, to }, i) => (
+            {PROGRAMS.map(({ icon, title, text, to }, i) => {
+              const Icon = ICONS[icon] ?? IconFlask;
+              return (
               <Reveal
                 key={title}
                 className="flex h-full flex-col items-start gap-3 rounded-[20px] border border-line bg-white p-6 shadow-[0_12px_24px_-10px_rgba(38,65,48,0.16)] transition-transform duration-300 hover:-translate-y-1"
@@ -144,7 +126,8 @@ export default function Home() {
                   <IconArrowRight size={16} />
                 </Link>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -154,14 +137,13 @@ export default function Home() {
         <DoodleLayer />
         <div className="shell relative">
           <Reveal className="flex flex-col items-center gap-6 rounded-3xl border border-line bg-white px-6 py-10 text-center shadow-[0_12px_24px_-10px_rgba(38,65,48,0.14)] sm:px-10 lg:px-14 lg:py-14">
-            <p className="eyebrow">Indiranagar Cambridge School</p>
+            <p className="eyebrow">{cta.eyebrow}</p>
             <div className="flex flex-col items-center gap-3">
               <h2 className="font-poppins text-[28px] font-bold leading-[1.1] sm:text-[36px] lg:text-[44px]">
-                Ready to Begin Your Child&apos;s Journey?
+                {cta.title}
               </h2>
               <p className="max-w-[640px] font-arsenal text-base text-body lg:text-lg">
-                Join the ICS family - where every student is inspired to learn,
-                grow, and lead.
+                {cta.body}
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-5">

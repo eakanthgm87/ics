@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { submitAdmission, toFormFields } from "../api";
+import { submitAdmission, toFormFields, useSection } from "../api";
 import { HeroBanner, Reveal } from "../components/common";
 import { IconCheck, IconUpload } from "../components/Icons";
 
@@ -191,6 +191,7 @@ function UploadBox({ label, file, onPick, error }) {
 }
 
 export default function Admissions() {
+  const hero = useSection("admissions-hero");
   const [values, setValues] = useState(EMPTY);
   const [files, setFiles] = useState({ tc: null, marks: null });
   const [errors, setErrors] = useState({});
@@ -280,12 +281,12 @@ export default function Admissions() {
       <section className="bg-white py-10 lg:py-20">
         <div className="shell">
           <HeroBanner
-            image="/images/hero-admissions.svg"
-            badge="Admissions open 2025–26"
+            image={hero.img}
+            badge={hero.eyebrow}
             align="center"
-            title="Join our Global Learning Community"
+            title={hero.title}
             height="min-h-[300px] sm:min-h-[360px] lg:min-h-[420px]"
-            text="Nurturing inquisitive minds and building a robust academic foundation. Embark on a dynamic learning path built for the modern world."
+            text={hero.body}
           >
             <a href="#registration" className="btn btn-primary mt-2">
               Start your application

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { HeroBanner } from "../components/common";
-import { useContent } from "../api";
+import { useContent, useSection } from "../api";
+import CONTENT from "../data/content.json";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -9,72 +10,6 @@ import {
 } from "../components/Icons";
 
 const TABS = ["All", "Sports", "Academics", "Events", "Campus"];
-
-const FALLBACK_PHOTOS = [
-  {
-    src: "/images/gal-orchestra.svg",
-    title: "School Orchestra",
-    caption: "The senior orchestra rehearsing for the annual concert.",
-    cat: "Events",
-    span: "tall",
-  },
-  {
-    src: "/images/gal-campus-life.svg",
-    title: "Campus Life",
-    caption: "Morning arrivals outside the main academic block.",
-    cat: "Campus",
-    span: "short",
-  },
-  {
-    src: "/images/gal-sports.svg",
-    title: "Athletics Meet",
-    caption: "Inter-house track finals on the synthetic running track.",
-    cat: "Sports",
-    span: "mid",
-  },
-  {
-    src: "/images/gal-library.svg",
-    title: "Central Library",
-    caption: "Quiet study hours in the school library and reading room.",
-    cat: "Academics",
-    span: "tall",
-  },
-  {
-    src: "/images/gal-art-studio.svg",
-    title: "Art Studio",
-    caption: "Grade 6 students at work in the visual arts studio.",
-    cat: "Academics",
-    span: "short",
-  },
-  {
-    src: "/images/gal-science-lab.svg",
-    title: "Science Laboratory",
-    caption: "Practical chemistry session for the middle school.",
-    cat: "Academics",
-    span: "mid",
-  },
-  {
-    src: "/images/gal-debate.svg",
-    title: "Debate Club",
-    caption: "Youth parliament mock session in the seminar room.",
-    cat: "Events",
-    span: "short",
-  },
-  {
-    src: "/images/gal-theatre.svg",
-    title: "Annual Theatre",
-    caption: "The senior school production on the main stage.",
-    cat: "Events",
-    span: "tall",
-  },
-  {
-    src: "/images/gal-campus-detail.svg",
-    title: "Heritage Archway",
-    caption: "The original 1986 archway at the HAL 3rd Stage campus.",
-    cat: "Campus",
-    span: "short",
-  },
-];
 
 const spanClass = {
   tall: "h-[320px] sm:h-[460px]",
@@ -158,7 +93,7 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
         <img
           src={photo.src}
           alt={photo.title}
-          className="h-[240px] w-full max-w-none object-cover sm:h-[340px] lg:h-full lg:flex-1"
+          className="h-[300px] w-full max-w-none bg-black object-contain sm:h-[420px] lg:h-full lg:min-w-0 lg:flex-1"
         />
 
         <div className="flex w-full shrink-0 flex-col justify-between gap-8 border-line bg-white p-6 sm:p-10 lg:h-full lg:w-[380px] lg:border-l">
@@ -228,7 +163,8 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
 }
 
 export default function Gallery() {
-  const PHOTOS = useContent("/gallery/", FALLBACK_PHOTOS);
+  const PHOTOS = useContent("/gallery/", CONTENT.gallery);
+  const hero = useSection("gallery-hero");
   const [tab, setTab] = useState("All");
   const [lightbox, setLightbox] = useState(null);
 
@@ -265,11 +201,11 @@ export default function Gallery() {
       <section className="bg-white py-10 lg:py-20">
         <div className="shell">
           <HeroBanner
-            image="/images/hero-gallery.svg"
-            badge="Capturing memories & milestones"
-            title="Gallery."
+            image={hero.img}
+            badge={hero.eyebrow}
+            title={hero.title}
             height="min-h-[280px] sm:min-h-[340px] lg:min-h-[380px]"
-            text="Step into the world of Indiranagar Cambridge School through our candid lens. Discover a warm archive of academic breakthroughs, spirited sporting events, creative performances, and everyday campus joy."
+            text={hero.body}
           />
         </div>
       </section>

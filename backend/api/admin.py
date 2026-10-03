@@ -11,14 +11,20 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from .models import (
+    AcademicStage,
     Admission,
     Award,
     Brochure,
+    Chapter,
     Enquiry,
+    Facility,
     GalleryImage,
+    PageSection,
     Person,
+    Program,
     SiteSettings,
     Stat,
+    StageCard,
 )
 
 
@@ -134,10 +140,11 @@ class PersonAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Portrait", {"fields": ("photo",)}),
         ("Details", {
-            "fields": ("name", "role", "department", "qualification"),
-            "description": "Name and role show on the card; the rest shows under it.",
+            "fields": ("name", "role", "department", "qualification", "experience"),
+            "description": "Name and designation show on the card; everything "
+                           "shows in the popup.",
         }),
-        ("Expanded card", {
+        ("Popup", {
             "fields": ("bio",),
             "description": "Only visible once a visitor clicks the card.",
         }),
@@ -184,6 +191,96 @@ class AwardAdmin(admin.ModelAdmin):
         return thumb(obj.image, 40)
 
 
+@admin.register(PageSection)
+class PageSectionAdmin(admin.ModelAdmin):
+    list_display = ("label", "title", "preview", "updated_at")
+    search_fields = ("label", "title", "body")
+    readonly_fields = ("key",)
+    fieldsets = (
+        (None, {"fields": ("label", "key")}),
+        ("Text", {
+            "fields": ("eyebrow", "title", "subtitle", "body", "quote"),
+            "description": "Not every section uses every field. Leave a field "
+                           "blank to keep the website's built-in text.",
+        }),
+        ("Image", {"fields": ("image",),
+                   "description": "Leave empty to keep the current picture."}),
+    )
+
+    @admin.display(description="Image")
+    def preview(self, obj):
+        return thumb(obj.image, 40)
+
+    # each key is wired to one spot on the site; seed creates them all
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Program)
+class ProgramAdmin(admin.ModelAdmin):
+    list_display = ("title", "link", "icon", "order", "is_published")
+    list_editable = ("order", "is_published")
+    fields = ("title", "text", "link", "icon", "order", "is_published")
+
+
+@admin.register(Facility)
+class FacilityAdmin(admin.ModelAdmin):
+    list_display = ("preview", "title", "order", "is_published")
+    list_display_links = ("preview", "title")
+    list_editable = ("order", "is_published")
+    fieldsets = (
+        ("Photo", {"fields": ("image", "alt")}),
+        ("Text", {"fields": ("title", "text", "tagline")}),
+        ("Ordering", {"fields": ("order", "is_published")}),
+    )
+
+    @admin.display(description="Image")
+    def preview(self, obj):
+        return thumb(obj.image, 40)
+
+
+class StageCardInline(admin.TabularInline):
+    model = StageCard
+    extra = 0
+    fields = ("tag", "title", "text", "order")
+
+
+@admin.register(AcademicStage)
+class AcademicStageAdmin(admin.ModelAdmin):
+    list_display = ("preview", "title", "order", "is_published")
+    list_display_links = ("preview", "title")
+    list_editable = ("order", "is_published")
+    inlines = [StageCardInline]
+    fieldsets = (
+        ("Photo", {"fields": ("image", "alt")}),
+        ("Text", {"fields": ("title", "text")}),
+        ("Ordering", {"fields": ("order", "is_published")}),
+    )
+
+    @admin.display(description="Image")
+    def preview(self, obj):
+        return thumb(obj.image, 40)
+
+
+@admin.register(Chapter)
+class ChapterAdmin(admin.ModelAdmin):
+    list_display = ("preview", "title", "order", "is_published")
+    list_display_links = ("preview", "title")
+    list_editable = ("order", "is_published")
+    fieldsets = (
+        ("Photo", {"fields": ("image", "alt")}),
+        ("Text", {"fields": ("title", "text", "tag", "badge")}),
+        ("Ordering", {"fields": ("order", "is_published")}),
+    )
+
+    @admin.display(description="Image")
+    def preview(self, obj):
+        return thumb(obj.image, 40)
+
+
 @admin.register(Brochure)
 class BrochureAdmin(admin.ModelAdmin):
     list_display = ("title", "download", "is_active", "created_at")
@@ -206,6 +303,11 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ("Social profiles", {
             "fields": ("facebook", "instagram", "youtube", "linkedin", "whatsapp"),
             "description": "Leave blank to hide that icon in the footer.",
+        }),
+        ("Form notifications", {
+            "fields": ("notify_emails",),
+            "description": "Every admission and contact form submission is "
+                           "emailed to these addresses.",
         }),
     )
 

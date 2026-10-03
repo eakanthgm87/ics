@@ -56,3 +56,6 @@ coverage/
 # through Drive. Delete these two lines if you want them versioned.
 *.fig
 *.sketch
+
+# raw photo dump; web-sized copies live in icsw/public/images/photos
+/images/

@@ -233,7 +233,30 @@
   to   { opacity: 1; transform: none; }
 }
 
+/* endless sideways loop: the track holds the list twice and slides by one
+   copy, so the seam is invisible and the speed never changes */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+.marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-wrap:hover .marquee,
+.marquee-wrap:focus-within .marquee {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+
+  .marquee-wrap {
+    overflow-x: auto;
+  }
+
   .reveal {
     opacity: 1;
     transform: none;
