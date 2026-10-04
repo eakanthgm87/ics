@@ -234,6 +234,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             ("Facebook", obj.facebook),
             ("Instagram", obj.instagram),
             ("YouTube", obj.youtube),
+            ("X", obj.twitter),
             ("LinkedIn", obj.linkedin),
             ("WhatsApp", obj.whatsapp),
         ]

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { SectionTitle } from "../components/common";
+import { SectionTitle, useSwipe } from "../components/common";
 import { paragraphs, useContent, useSection } from "../api";
 import CONTENT from "../data/content.json";
 import {
@@ -20,6 +20,8 @@ function PersonModal({ people, index, onIndex, onClose }) {
   const person = people[index];
   const total = people.length;
   const at = (dir) => (index + dir + total) % total;
+  // swipe left for the next person, right for the previous one
+  const swipe = useSwipe(() => onIndex(at(1)), () => onIndex(at(-1)));
 
   useEffect(() => {
     const onKey = (e) => {
@@ -54,10 +56,12 @@ function PersonModal({ people, index, onIndex, onClose }) {
       <div
         key={index /* replay the entrance when stepping between people */}
         onClick={(e) => e.stopPropagation()}
-        className="relative grid max-h-[92vh] w-full max-w-[1040px] grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[28px] bg-white shadow-[0_40px_120px_-20px_rgba(0,0,0,0.7)] ring-1 ring-white/10 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] md:grid-rows-1 motion-safe:animate-[lb-pop_.4s_cubic-bezier(0.16,1,0.3,1)]"
+        {...swipe}
+        // one fixed size for everyone: a longer bio scrolls inside instead
+        className="relative grid h-[88vh] max-h-[720px] w-full max-w-[1040px] md:h-[600px] md:max-h-[90vh] grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[28px] bg-white shadow-[0_40px_120px_-20px_rgba(0,0,0,0.7)] ring-1 ring-white/10 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] md:grid-rows-1 motion-safe:animate-[lb-pop_.4s_cubic-bezier(0.16,1,0.3,1)]"
       >
         {/* ------------------------------------------------ portrait side */}
-        <div className="relative h-[260px] overflow-hidden bg-ink sm:h-[360px] md:h-auto md:min-h-[560px]">
+        <div className="relative h-[240px] overflow-hidden bg-ink sm:h-[320px] md:h-full">
           <img
             src={person.img}
             alt={person.name}
@@ -101,7 +105,7 @@ function PersonModal({ people, index, onIndex, onClose }) {
                     <dt className="font-poppins text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                       {k}
                     </dt>
-                    <dd className="font-poppins text-sm font-semibold text-ink">{v}</dd>
+                    <dd className="font-poppins text-sm font-bold text-ink">{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -109,11 +113,11 @@ function PersonModal({ people, index, onIndex, onClose }) {
 
             {lead ? (
               <div className="flex flex-col gap-3">
-                <p className="border-l-[3px] border-brand pl-4 font-arsenal text-[17px] leading-[1.65] text-ink">
+                <p className="copy-justify border-l-[3px] border-brand pl-4 font-arsenal text-[17px] leading-[1.65] text-ink">
                   {lead}
                 </p>
                 {rest.map((t) => (
-                  <p key={t} className="font-arsenal text-[15px] leading-[1.75] text-body">
+                  <p key={t} className="copy-justify font-arsenal text-[15px] leading-[1.75] text-body">
                     {t}
                   </p>
                 ))}
@@ -157,13 +161,74 @@ function PersonModal({ people, index, onIndex, onClose }) {
 
 /* ------------------------------------------------------ faculty marquee --
    The cards scroll sideways in an endless loop at one constant speed (the
-   list is rendered twice and the track slides by exactly one copy). Every
-   card is one fixed size — a portrait with the name and role laid over it —
-   so a long name can never make one card taller than the rest. Hovering or
-   focusing pauses the loop; clicking opens the full profile. */
+   list is rendered twice and the track wraps after exactly one copy). It can
+   also be dragged / swiped either way, then carries on by itself. Every card
+   is one fixed size — a portrait with the name and role laid over it — so a
+   long name can never make one card taller than the rest. Hovering or
+   focusing pauses the loop; clicking (not dragging) opens the full profile. */
+const LOOP_SPEED = 56; // px per second — the same pace as before
+
+function useDragLoop() {
+  const track = useRef(null);
+  const s = useRef({ x: 0, paused: false, drag: null, moved: false });
+
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return;
+    const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+    let last = performance.now();
+    const tick = (now) => {
+      const st = s.current;
+      const dt = Math.min(now - last, 64) / 1000;
+      last = now;
+      if (!st.paused && !st.drag && !still) st.x -= LOOP_SPEED * dt;
+      const half = el.scrollWidth / 2;
+      if (half) st.x = ((st.x % half) - half) % half; // keep within one copy
+      el.style.transform = `translate3d(${st.x}px, 0, 0)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const st = s.current;
+  const wrapper = {
+    onMouseEnter: () => (st.paused = true),
+    onMouseLeave: () => (st.paused = false),
+    onFocus: () => (st.paused = true),
+    onBlur: () => (st.paused = false),
+    onPointerDown: (e) => {
+      st.drag = { from: e.clientX, x: st.x, id: e.pointerId };
+      st.moved = false;
+    },
+    onPointerMove: (e) => {
+      if (!st.drag) return;
+      const dx = e.clientX - st.drag.from;
+      if (!st.moved && Math.abs(dx) > 6) {
+        st.moved = true;
+        e.currentTarget.setPointerCapture(st.drag.id);
+      }
+      if (st.moved) st.x = st.drag.x + dx;
+    },
+    onPointerUp: () => (st.drag = null),
+    onPointerCancel: () => (st.drag = null),
+    // a drag must not count as a click on the card under the pointer
+    onClickCapture: (e) => {
+      if (st.moved) {
+        e.preventDefault();
+        e.stopPropagation();
+        st.moved = false;
+      }
+    },
+  };
+  return { track, wrapper };
+}
+
 function FacultyLoop() {
   const PEOPLE = useContent("/people/", CONTENT.people);
   const [open, setOpen] = useState(null);
+  const { track, wrapper } = useDragLoop();
 
   const card = (p, i, copy) => (
     <li key={`${copy}-${i}`} className="shrink-0 pr-6" aria-hidden={copy ? true : undefined}>
@@ -178,6 +243,7 @@ function FacultyLoop() {
           src={p.img}
           alt=""
           loading="lazy"
+          draggable={false}
           className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.06]"
         />
         <span className="absolute inset-0 bg-gradient-to-t from-[#0b1510]/90 via-[#0b1510]/20 via-45% to-transparent" />
@@ -198,12 +264,12 @@ function FacultyLoop() {
 
   return (
     <>
-      <div className="marquee-wrap overflow-hidden py-6">
-        <ul
-          className="marquee flex w-max"
-          // ~5s per card keeps the same speed however many cards there are
-          style={{ "--marquee-duration": `${PEOPLE.length * 5}s` }}
-        >
+      <div
+        {...wrapper}
+        // vertical page scrolling stays native; sideways drags move the strip
+        className="cursor-grab touch-pan-y select-none overflow-hidden py-6 active:cursor-grabbing"
+      >
+        <ul ref={track} className="flex w-max will-change-transform">
           {PEOPLE.map((p, i) => card(p, i, 0))}
           {PEOPLE.map((p, i) => card(p, i, 1))}
         </ul>
@@ -249,23 +315,36 @@ function AwardsCarousel() {
         {shown.map((a) => (
           <article
             key={a.title + a.year}
-            className="flex h-[460px] flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_12px_28px_-14px_rgba(38,65,48,0.2)] transition-transform duration-300 hover:-translate-y-1"
+            className="group flex h-[370px] flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-[0_12px_28px_-14px_rgba(38,65,48,0.2)] transition-[transform,box-shadow] duration-500 hover:-translate-y-1.5 hover:shadow-[0_28px_48px_-20px_rgba(38,65,48,0.4)]"
           >
-            {/* plaques and certificates come in every shape — show them whole */}
-            <img
-              src={a.img}
-              alt={a.title}
-              className="h-[240px] w-full shrink-0 bg-tint object-contain p-2"
-              loading="lazy"
-            />
-            <div className="flex flex-1 flex-col items-start gap-3 p-6">
-              <span className="rounded-full bg-tint px-3 py-1 font-poppins text-xs font-bold text-brand">
+            {/* plaques, trophies and certificates come in every shape: each
+                sits whole and centred in an identical frame, over a blurred,
+                enlarged copy of itself so no frame ever looks empty */}
+            <div className="relative h-[220px] shrink-0 overflow-hidden bg-ink">
+              <img
+                src={a.img}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl"
+                loading="lazy"
+              />
+              <span className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
+              <img
+                src={a.img}
+                alt={a.title}
+                className="relative h-full w-full object-contain p-5 drop-shadow-[0_14px_20px_rgba(0,0,0,0.45)] transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                loading="lazy"
+              />
+              <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 font-poppins text-xs font-bold text-brand shadow-sm backdrop-blur">
                 {a.year}
               </span>
-              <h3 className="font-poppins text-lg font-bold leading-snug">
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col items-start gap-2 px-5 py-4">
+              <span className="h-[3px] w-8 rounded-full bg-brand transition-all duration-500 group-hover:w-14" />
+              <h3 className="line-clamp-2 font-poppins text-base font-bold leading-snug">
                 {a.title}
               </h3>
-              <p className="subhead text-sm text-body">{a.body}</p>
+              <p className="line-clamp-3 subhead text-[13px] leading-relaxed text-body">{a.body}</p>
             </div>
           </article>
         ))}
@@ -344,22 +423,22 @@ export default function About() {
           watermark sits behind the heading, its left edge flush with the
           eyebrow, heading and body below it. */}
       <section className="overflow-hidden bg-white py-12 lg:py-20">
-        <div className="shell grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,600px)] lg:gap-20">
+        <div className="shell grid items-center gap-12 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)] lg:gap-20">
           <div className="relative flex flex-col items-start gap-8">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute -top-12 left-0 select-none font-poppins text-[130px] font-bold leading-[0.78] tracking-tight text-black/[0.045] sm:text-[200px] lg:-top-20 lg:text-[280px]"
+              className="pointer-events-none absolute -top-12 left-0 select-none font-poppins text-[130px] font-bold leading-[0.78] tracking-tight text-black/[0.1] sm:text-[200px] lg:-top-20 lg:text-[280px]"
             >
               1979
             </span>
 
             <div className="relative flex flex-col items-start gap-4">
               <p className="eyebrow text-ink">{school.eyebrow}</p>
-              <h1 className="font-poppins text-[36px] font-bold leading-[1.1] sm:text-[48px] lg:text-[56px]">
+              <h1 className="font-poppins text-[32px] font-bold leading-[1.1] sm:text-[44px] lg:text-[40px] xl:text-[56px]">
                 {school.title}
               </h1>
               {paragraphs(school.body).map((p) => (
-                <p key={p} className="max-w-[620px] font-arsenal text-base leading-[1.7] text-body">
+                <p key={p} className="copy-justify max-w-[620px] font-arsenal text-base leading-[1.7] text-body">
                   {p}
                 </p>
               ))}
@@ -381,8 +460,8 @@ export default function About() {
 
       {/* ------------------------------------------------------ the founder */}
       <section className="bg-white py-12 lg:py-20">
-        <div className="shell grid items-center gap-12 lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)] lg:gap-20">
-          <div className="relative w-full">
+        <div className="shell grid items-start gap-12 lg:grid-cols-2 xl:grid-cols-[minmax(0,480px)_minmax(0,1fr)] lg:gap-20">
+          <div className="relative w-full lg:sticky lg:top-28">
             <img
               src={founder.img}
               alt={founder.eyebrow}
@@ -403,7 +482,7 @@ export default function About() {
               {founder.title}
             </h2>
             {paragraphs(founder.body).map((p) => (
-              <p key={p} className="mt-2 font-arsenal text-base leading-[1.7] text-body">
+              <p key={p} className="copy-justify mt-2 font-arsenal text-base leading-[1.7] text-body">
                 {p}
               </p>
             ))}
@@ -419,7 +498,7 @@ export default function About() {
       {/* ---------------------------------------------------- the principal
           Mirror of the founder row: copy left, portrait right. */}
       <section className="bg-white py-12 lg:py-20">
-        <div className="shell grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-20">
+        <div className="shell grid items-start gap-12 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-20">
           <div className="flex flex-col items-start gap-3">
             <p className="font-poppins text-[26px] font-bold uppercase leading-tight text-muted lg:text-[34px]">
               {principal.eyebrow}
@@ -431,7 +510,7 @@ export default function About() {
               <p className="subhead text-lg text-ink">{principal.subtitle}</p>
             ) : null}
             {paragraphs(principal.body).map((p) => (
-              <p key={p} className="mt-3 font-arsenal text-base leading-[1.7] text-body">
+              <p key={p} className="copy-justify mt-3 font-arsenal text-base leading-[1.7] text-body">
                 {p}
               </p>
             ))}
@@ -445,7 +524,7 @@ export default function About() {
           <img
             src={principal.img}
             alt={`${principal.eyebrow}, Principal`}
-            className="h-[380px] w-full rounded-2xl object-cover object-top sm:h-[520px]"
+            className="h-[380px] w-full rounded-2xl object-cover object-top sm:h-[520px] lg:sticky lg:top-28"
           />
         </div>
       </section>
@@ -466,19 +545,26 @@ export default function About() {
         <div className="shell flex flex-col items-center gap-10 lg:gap-16">
           <SectionTitle title="Our Vision, Mission & Motto" />
           <div className="grid w-full gap-8 lg:grid-cols-3 lg:gap-10">
-            {values.map(({ s, Icon }) => (
+            {values.map(({ s, Icon }, i) => (
               <div
                 key={s.title}
-                className="flex flex-col items-start gap-6 rounded-2xl border border-line bg-tint p-8 lg:p-10"
+                tabIndex={0}
+                className="group relative flex flex-col items-start gap-6 overflow-hidden rounded-3xl border border-line bg-tint p-8 outline-none transition-[transform,box-shadow,border-color] duration-500 ease-out hover:-translate-y-2 hover:border-ink/20 hover:shadow-[0_34px_60px_-24px_rgba(38,65,48,0.55)] focus-visible:-translate-y-2 focus-visible:shadow-[0_34px_60px_-24px_rgba(38,65,48,0.55)] lg:p-10"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink">
-                  <Icon size={26} />
+                {/* oversized index numeral: faint at rest, solid green on hover */}
+                <span className="pointer-events-none absolute right-5 top-3 origin-top-right font-poppins text-[96px] font-bold leading-none text-ink/[0.07] transition-all duration-500 group-hover:scale-110 group-hover:text-ink group-focus-visible:scale-110 group-focus-visible:text-ink">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <div className="flex w-full flex-col gap-3">
+
+                <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-ink shadow-[0_8px_20px_-10px_rgba(38,65,48,0.4)] transition-all duration-500 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-ink group-hover:text-white">
+                  <Icon size={28} />
+                </span>
+                <div className="relative flex w-full flex-col gap-3">
                   <h3 className="font-poppins text-2xl font-bold">{s.title}</h3>
-                  <span className="h-px w-full bg-ink/10" />
                 </div>
-                <p className="font-arsenal text-base leading-[1.7] text-body">{s.body}</p>
+                <p className="relative font-arsenal text-base leading-[1.7] text-body">
+                  {s.body}
+                </p>
               </div>
             ))}
           </div>

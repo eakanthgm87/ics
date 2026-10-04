@@ -11,6 +11,8 @@ import Gallery from "./pages/Gallery";
 import Admissions from "./pages/Admissions";
 import Contact from "./pages/Contact";
 import FounderStory from "./pages/FounderStory";
+import SchoolInfo from "./pages/SchoolInfo";
+import Legal from "./pages/Legal";
 
 function NotFound() {
   return (
@@ -50,6 +52,9 @@ export default function App() {
           <Route path="/admissions" element={<Admissions />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/founder-story" element={<FounderStory />} />
+          <Route path="/school-information" element={<SchoolInfo />} />
+          <Route path="/privacy-policy" element={<Legal key="privacy" sectionKey="privacy" />} />
+          <Route path="/terms" element={<Legal key="terms" sectionKey="terms" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -21,7 +21,7 @@ export default function Footer() {
                 height="289"
               />
             </Link>
-            <p className="font-arsenal text-sm text-white/80">
+            <p className="font-arsenal text-sm leading-[1.7] text-white/80">
               {footer.body}
             </p>
           </div>
@@ -102,13 +102,13 @@ export default function Footer() {
           </p>
           <div className="flex items-start gap-6">
             <Link
-              to="/contact"
+              to="/privacy-policy"
               className="font-arsenal text-xs text-white/50 hover:text-white"
             >
               Privacy Policy
             </Link>
             <Link
-              to="/contact"
+              to="/terms"
               className="font-arsenal text-xs text-white/50 hover:text-white"
             >
               Terms of Service

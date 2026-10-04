@@ -2,7 +2,7 @@
   "sections": {
     "home-hero": {
       "label": "Home — hero banner",
-      "eyebrow": "Admissions open 2025–26",
+      "eyebrow": "Admissions open {year}",
       "title": "Nurturing Minds Since 1979",
       "body": "Welcome to Indiranagar Cambridge School — a co-educational institution offering Nursery through Grade 10 under the Karnataka State Education Board, where academic excellence meets holistic development.",
       "img": "/images/photos/hero-home.jpg"
@@ -15,26 +15,26 @@
     },
     "about-school": {
       "label": "About — about the school",
-      "eyebrow": "Established",
-      "title": "About the school",
-      "body": "Established in 1979 in the lush surroundings of HAL 3rd Stage, Bengaluru, the Indiranagar Cambridge School has stood as a beacon of progressive learning for over four decades. What began with just 7 students and 2 teachers in a modest rented space in Thippasandra has matured into a trusted co-educational institution nurturing well-rounded learners.",
+      "eyebrow": "Established 1979",
+      "title": "The Indiranagar Cambridge School",
+      "body": "The Indiranagar Cambridge School, established in 1979, is a co-educational institution located in the lush surroundings of HAL 3rd Stage, Bengaluru. Managed by the Indiranagar Cambridge Educational Trust, with Late Mrs. Kasturi Shoury as the Founder Managing Trustee, the school offers education from Nursery through Grade 10, adhering to the Karnataka State Education Board (KSEEB) curriculum. The medium of instruction is English, with Kannada as the second language and Hindi as the third.\n\nThe school emphasizes a balanced blend of experienced and dynamic faculty, fostering continuous innovation to enhance educational quality. Beyond academics, it offers a range of extracurricular activities, including life skills classes, meditation sessions, spell bee competitions, and educational cinema through Edumedia. The curriculum is enriched with programs like Gaptopedia, newspaper-in-education initiatives, health education via Address Health, field trips, and student counselling services.\n\nFacilities at The Indiranagar Cambridge School include well-equipped classrooms, libraries, science and computer laboratories, and a spacious playground accommodating sports like cricket, tennis, basketball, karate, and athletics.\n\nLocated at #52, 6th Cross, 8th Main Road, HAL 3rd Stage, Bengaluru, Karnataka 560075, The Indiranagar Cambridge School continues its legacy of providing quality education, focusing on the holistic development of its students.",
       "img": "/images/photos/about-school.jpg"
     },
     "about-founder": {
       "label": "About — the founder",
-      "eyebrow": "Late Mrs. Kasturi Shoury (b. 1950)",
-      "title": "About the founder",
-      "body": "In 1979, Mrs. Kasturi Shoury set out to create a school that offered quality English-medium education to the lower middle class. Starting with just seven curious students in a modest rented space in Thippasandra, her vision blended rigorous academics with the values of compassion and continuous self-improvement.\n\n\"We do not educate for examinations; we educate for life,\" she believed. Under her stewardship, the school moved to its current premises in 1986 and produced its first Class X batch in 1989 — embedding life skills, meditation, and holistic development into the heart of the campus.",
-      "quote": "Nurture the root, and the branches will reach the skies.",
+      "eyebrow": "Late Mrs. Kasturi Shoury",
+      "title": "Founder Trustee",
+      "body": "Late Mrs. Kasturi Shoury, the visionary founder trustee of Indiranagar Cambridge School, was a woman of unwavering determination and profound foresight. Born on May 7, 1950 in Tamil Nadu and raised in Mangalore, her journey led her to Bangalore after her marriage to Mr. K.M. Shoury.\n\nMrs. Shoury firmly believed that having small aspirations in life was a disservice to one's potential. While working with the Department of Post & Telegraph, she recognized her calling—to make a meaningful contribution to society through education. Determined to provide quality English-medium education to the lower middle class, she founded Indiranagar Cambridge School in 1979.\n\nWith just seven students and two teachers, she began the school in a modest rented space in Thippasandra. Balancing her night shifts at the Department of P&T, her responsibilities as a school founder during the day, and her role as a loving mother to three sons, Mrs. Shoury epitomized dedication and perseverance.\n\nHer relentless efforts bore fruit year after year, with the school expanding steadily. In 1986, the institution moved to its current premises, and by 1989, the first batch of Class X students graduated.\n\nMrs. Shoury was a beacon of energy, resilience, and generosity, always extending a helping hand to those in need. She never sought competition with others but instead believed in continuous self-improvement. Though she is no longer with us, her legacy lives on through the institution she built with passion and purpose. Indiranagar Cambridge School stands tall as a testament to her vision, carrying forward her dream of empowering young minds through education.",
+      "quote": "",
       "img": "/images/photos/founder.jpg"
     },
     "about-principal": {
       "label": "About — the principal",
       "eyebrow": "Mrs. Shanthi Ravichandran",
-      "title": "About the Principal",
-      "subtitle": "Director of Academics · M.Phil, MA, B.Ed",
-      "body": "Mrs. Shanthi Ravichandran leads academics at Indiranagar Cambridge School, guiding the teaching team across Nursery to Grade 10 under the Karnataka State Education Board. Her focus is a classroom where every child is supported to reach their own personal best.",
-      "quote": "Teachers are our greatest strength.",
+      "title": "Principal's Desk",
+      "subtitle": "Principal · M.Phil, MA, B.Ed",
+      "body": "To create a compassionate, inclusive school environment where every child is seen, valued, and supported.\n\nWe strive to foster a love of learning, ensuring that each student, regardless of their financial background or academic ability, is empowered to grow, thrive, and achieve their personal best.\n\nOur school is a place where passion for education meets care and understanding, nurturing well-groomed individuals who are prepared for the future.\n\nEducation serves as the foundation for knowledge and the pursuit of truth—it is the one constant in our lives. It plays a crucial role in the holistic development of an individual, equipping them with the skills needed to navigate life's challenges. For a young child, school provides a structured yet nurturing environment that mirrors the real world, offering invaluable learning experiences.\n\nAt Indiranagar Cambridge School, we are committed to preparing our students for life beyond the classroom. While we emphasize academic excellence in subjects like Mathematics, Sciences, and Languages, we also focus on developing emotional intelligence and social skills through various competitions, activities, and sports. We encourage critical and creative thinking while fostering curiosity, as we believe that true education goes beyond academics—it must nurture both the mind and the heart.\n\nOur mission would be incomplete without the unwavering support of parents, who entrust us with the responsibility of guiding their children's growth. At ICS, our dedicated staff mentor students with care, kindness, and discipline, ensuring they are well-prepared to spread their wings and soar when they graduate.\n\nAs George Evans wisely said, \"Every student can learn, just not on the same day or in the same way.\" We remain committed to helping each child reach their full potential in their own unique way.",
+      "quote": "",
       "img": "/images/photos/principal.jpg"
     },
     "about-people": {
@@ -86,7 +86,7 @@
     },
     "admissions-hero": {
       "label": "Admissions — hero banner",
-      "eyebrow": "Admissions open 2025–26",
+      "eyebrow": "Admissions open {year}",
       "title": "Join our Global Learning Community",
       "body": "Nurturing inquisitive minds and building a robust academic foundation. Embark on a dynamic learning path built for the modern world.",
       "img": "/images/photos/hero-admissions.jpg"
@@ -107,17 +107,75 @@
     },
     "footer": {
       "label": "Footer — tagline",
-      "body": "Empowering students to think critically, lead with empathy, and design a purposeful tomorrow on the global stage."
+      "body": "Since 1979, The Indiranagar Cambridge School has nurtured confident, compassionate learners from Nursery to Grade 10 — empowering them to think critically, lead with empathy and shape a purposeful tomorrow."
+    },
+    "info-intro": {
+      "label": "School information — page heading",
+      "eyebrow": "The Indiranagar Cambridge School",
+      "title": "School Information",
+      "body": "Accreditation, affiliations, our partnership with parents, and the policies that keep every child safe and well at ICS."
+    },
+    "info-accreditation": {
+      "label": "School information — accreditation",
+      "title": "Accreditation",
+      "body": "### The Indiranagar Cambridge School (UDISE NO: 29200312171)\n\nThe Indiranagar Cambridge School follows the Karnataka State Board syllabus."
+    },
+    "info-affiliation": {
+      "label": "School information — affiliation",
+      "title": "Affiliation",
+      "body": "### Spell-bee exams\nSpell Bee is a unique educational activity that combines education, fun and competition. While it is competitive in nature, it also adds significant educational value to each student's education.\n\n### Science Olympiad Foundation\nSOF is an Educational Organization popularizing academic competition and assisting development of competitive spirit among school children."
+    },
+    "info-parents": {
+      "label": "School information — parent-teacher interaction",
+      "title": "Parent-Teacher Interaction",
+      "body": "In the ever-evolving landscape of education, one thing remains constant – the pivotal role of parents in shaping a child's academic journey. The age-old adage, \"It takes a village to raise a child,\" holds value when nurturing a child's academic growth.\n\nAt The Indiranagar Cambridge School, we firmly believe that parent-teacher interaction is the cornerstone of a child's educational development, and a potent catalyst in improving a child's academic performance."
+    },
+    "info-safety": {
+      "label": "School information — safety & wellbeing",
+      "title": "Safety & Wellbeing",
+      "body": "According to the Karnataka State Child Protection Policy 2016, every school has to create \"A Child Safety Committee\". The members of the committee are:\n\n- The school head / school administrator (in the committee the school head is the school administration) – 1\n- Two teachers – one must be a woman – 2\n- Two children of SDMC (School Development & Monitoring Committee) – 2\n- One officer or a staff member of the Health Department – 1\n\nThis meeting will be held monthly.\n\n### Points of Discussion\n- Children protection rights will be discussed, awareness created and close consultation done.\n- Records will be maintained.\n- The Directorate of Children has launched a toll free number 14499 to provide free self-counselling service for children.\n- The children helpline number 1098 should be posted on the walls of the school.\n- Complaint and suggestion boxes are placed in school at a height children can reach.\n- To create awareness regarding the Child Protection Policy 2016, SOP and guidelines in parents' meetings, and to inform parents to bring directly to the attention of the school any problem related to the safety and rights of children.\n- If there is any problem related to child safety violation, school / institution heads and departmental officers will take action based on the Child Protection Policy 2016 and SOP.\n- Awareness of responsibilities of school / institute Head Master / Head Mistress and teaching staff.\n- All departmental officers, teachers and staff should take necessary steps to ensure that no children drop out of school and are not deprived of education.\n- All persons working on the school premises must have official identity cards, and complete records of these persons are kept in the school.\n- Teachers / staff are present in the school half an hour before the scheduled school period, recording the attendance of children in the morning and afternoon and ensuring that the children are in the school.\n- During the prescribed period, children are not sent out for any reason.\n- The school timetable is provided to children and parents by school terms and class wise.\n- Special classes – approval of parents is taken for the child to attend special classes.\n- Head teachers are available when special classes are conducted. A subject teacher, a physical education teacher and one female teacher are physically present.\n- The concerned teacher confirms with the parents the safe arrival of the children after the end of special classes.\n\n### Other Safety Measures in the School\n- There are two entries, i.e. student entry and entry for others.\n- At the entries there are security personnel on duty 24/7. A visitors' log book is diligently maintained at the entries.\n- There are 128 CCTV cameras installed in the school building covering the classrooms, corridors and common areas, all functional and monitored.\n- Every floor has dedicated floor in-charges monitoring the activities of the students during school hours.\n- A parent authentication card / walker's pass with the picture of the parents / guardians is issued to students. Parents / guardians are required to carry the card while visiting the school.\n- Fire safety: 10 fire extinguishers are installed in the building (2 on each floor near the washrooms, 1 in the science laboratory and 1 in the computer lab). All extinguishers have been re-filled and the licence renewed.\n- Generator maintenance: periodic servicing of the generator is done.\n- 6 Blue Star water dispensers provide pure drinking water to the students.\n- A traffic awareness session on road safety was conducted by traffic inspectors from Jeevanbhima Nagar Traffic Police Station, briefing students on rules, traffic signs and signals, accidents, road manners and important signage."
+    },
+    "info-child-safety": {
+      "label": "School information — child safety (POCSO)",
+      "title": "Child Safety",
+      "body": "To prevent sexual violence, harassment and abuse of children under the age of 18 years, and to provide protection, security and wellbeing to children, the Government of India has implemented the POCSO Act 2012.\n\n### POCSO Rules (Protection of Children from Sexual Offences Act & Rules, 2012)\n- The school strictly follows the POCSO rules. Special orientation has been given to the entire staff of the school.\n- Procedures are followed for behavioural, bullying and academic issues; corporal punishment is not permitted in or out of classrooms.\n- Teachers use positive discipline to develop the child's own self-discipline, to build a mutually respectful relationship with students and to teach them life-long skills.\n- Age-appropriate safe touch and unsafe touch has been taught to all children in classrooms, and puberty sessions have been taken in groups.\n- Laws that protect children and prosecute offenders include:\n  - The Juvenile Justice (Care and Protection of Children) Act\n  - National Policy for Children\n  - The National Charter for Children (2003)\n\nChildren can call the Childline helpline 1098 at any time."
+    },
+    "privacy": {
+      "label": "Privacy Policy page",
+      "title": "Privacy Policy",
+      "body": "Our privacy policy is being finalised and will be published here shortly.\n\nFor any questions in the meantime, please contact the school office at indiranagarcambridgeschool@gmail.com or 080-25215207."
+    },
+    "terms": {
+      "label": "Terms of Service page",
+      "title": "Terms of Service",
+      "body": "Our terms of service is being finalised and will be published here shortly.\n\nFor any questions in the meantime, please contact the school office at indiranagarcambridgeschool@gmail.com or 080-25215207."
     }
   },
-
   "stats": [
-    { "label": "Founded", "to": 1979, "from": 2026, "grouped": false, "icon": "calendar" },
-    { "label": "Students in 1979", "to": 7, "icon": "users" },
-    { "label": "Grades: Nursery to 10", "to": 10, "icon": "award" },
-    { "label": "First Class X Batch", "to": 1989, "grouped": false, "icon": "pin" }
+    {
+      "label": "Founded",
+      "to": 1979,
+      "from": 2026,
+      "grouped": false,
+      "icon": "calendar"
+    },
+    {
+      "label": "Students in 1979",
+      "to": 7,
+      "icon": "users"
+    },
+    {
+      "label": "Grades: Nursery to 10",
+      "to": 10,
+      "icon": "award"
+    },
+    {
+      "label": "First Class X Batch",
+      "to": 1989,
+      "grouped": false,
+      "icon": "pin"
+    }
   ],
-
   "programs": [
     {
       "icon": "flask",
@@ -132,7 +190,6 @@
       "to": "/life-at-ics"
     }
   ],
-
   "people": [
     {
       "name": "Mrs. Aruna Pradeep Kannan",
@@ -201,23 +258,86 @@
       "img": "/images/photos/faculty-jayalakshmi.jpg"
     }
   ],
-
   "awards": [
-    { "year": "2026", "title": "India Top School Awards 2026", "body": "Excellence in Sustainable & Holistic Growth Programs — LiveLife Education & ELDROK, Edu India Expo", "img": "/images/photos/award-india-top-school-2026.jpg" },
-    { "year": "2025-26", "title": "Golden School — State Level", "body": "Indian Talent Olympiad", "img": "/images/photos/award-ito-golden-school.jpg" },
-    { "year": "2025-26", "title": "Best Principal Award", "body": "Indian Talent Olympiad — presented to Mrs. Shanthi Ravichandran", "img": "/images/photos/award-ito-best-principal.jpg" },
-    { "year": "2025", "title": "SIP Arithmetic Genius Contest", "body": "Certificate of Appreciation — All India Inter-School Contest, SIP Academy", "img": "/images/photos/award-sip-arithmetic-2025.jpg" },
-    { "year": "2024-25", "title": "WIZ International Spell Bee", "body": "Memento of Appreciation — Extraschool", "img": "/images/photos/award-wiz-international-spell-bee.jpg" },
-    { "year": "2024-25", "title": "JB Nagar Cluster Sports", "body": "First & Second Prize — Department of School Education & Literacy", "img": "/images/photos/award-cluster-sports-2024.jpg" },
-    { "year": "2022-23", "title": "WIZ National Spell Bee", "body": "Memento of Appreciation", "img": "/images/photos/award-wiz-national-spell-bee.jpg" },
-    { "year": "2022-23", "title": "JB Nagar Cluster Sports", "body": "Second Prize — Samagra Shikshana Karnataka", "img": "/images/photos/award-cluster-sports-2022.jpg" },
-    { "year": "2021-22", "title": "Founder Trustee Award — Folk Dance", "body": "Winner and 2nd Runner-up", "img": "/images/photos/award-founder-trustee-folk-dance.jpg" },
-    { "year": "2019-20", "title": "Address School Health Awards — Winner", "body": "Certificate of Commitment to being a healthy school", "img": "/images/photos/award-school-health-2019.jpg" },
-    { "year": "2018", "title": "School Health Hall of Fame", "body": "Parikrma Address School Health Awards — Certificate of Commitment", "img": "/images/photos/award-health-hall-of-fame-2018.jpg" },
-    { "year": "2016-17", "title": "JB Nagar Cluster Sports", "body": "First Prize — Department of Public Instruction", "img": "/images/photos/award-cluster-sports-2016.jpg" },
-    { "year": "Annual", "title": "Swift Awards", "body": "Inter-house sports meet — Champions and Runners-up trophies", "img": "/images/photos/award-swift-champions.jpg" }
+    {
+      "year": "2026",
+      "title": "India Top School Awards 2026",
+      "body": "Excellence in Sustainable & Holistic Growth Programs — LiveLife Education & ELDROK, Edu India Expo",
+      "img": "/images/photos/award-india-top-school-2026.jpg"
+    },
+    {
+      "year": "2025-26",
+      "title": "Golden School — State Level",
+      "body": "Indian Talent Olympiad",
+      "img": "/images/photos/award-ito-golden-school.jpg"
+    },
+    {
+      "year": "2025-26",
+      "title": "Best Principal Award",
+      "body": "Indian Talent Olympiad — presented to Mrs. Shanthi Ravichandran",
+      "img": "/images/photos/award-ito-best-principal.jpg"
+    },
+    {
+      "year": "2025",
+      "title": "SIP Arithmetic Genius Contest",
+      "body": "Certificate of Appreciation — All India Inter-School Contest, SIP Academy",
+      "img": "/images/photos/award-sip-arithmetic-2025.jpg"
+    },
+    {
+      "year": "2024-25",
+      "title": "WIZ International Spell Bee",
+      "body": "Memento of Appreciation — Extraschool",
+      "img": "/images/photos/award-wiz-international-spell-bee.jpg"
+    },
+    {
+      "year": "2024-25",
+      "title": "JB Nagar Cluster Sports",
+      "body": "First & Second Prize — Department of School Education & Literacy",
+      "img": "/images/photos/award-cluster-sports-2024.jpg"
+    },
+    {
+      "year": "2022-23",
+      "title": "WIZ National Spell Bee",
+      "body": "Memento of Appreciation",
+      "img": "/images/photos/award-wiz-national-spell-bee.jpg"
+    },
+    {
+      "year": "2022-23",
+      "title": "JB Nagar Cluster Sports",
+      "body": "Second Prize — Samagra Shikshana Karnataka",
+      "img": "/images/photos/award-cluster-sports-2022.jpg"
+    },
+    {
+      "year": "2021-22",
+      "title": "Founder Trustee Award — Folk Dance",
+      "body": "Winner and 2nd Runner-up",
+      "img": "/images/photos/award-founder-trustee-folk-dance.jpg"
+    },
+    {
+      "year": "2019-20",
+      "title": "Address School Health Awards — Winner",
+      "body": "Certificate of Commitment to being a healthy school",
+      "img": "/images/photos/award-school-health-2019.jpg"
+    },
+    {
+      "year": "2018",
+      "title": "School Health Hall of Fame",
+      "body": "Parikrma Address School Health Awards — Certificate of Commitment",
+      "img": "/images/photos/award-health-hall-of-fame-2018.jpg"
+    },
+    {
+      "year": "2016-17",
+      "title": "JB Nagar Cluster Sports",
+      "body": "First Prize — Department of Public Instruction",
+      "img": "/images/photos/award-cluster-sports-2016.jpg"
+    },
+    {
+      "year": "Annual",
+      "title": "Swift Awards",
+      "body": "Inter-house sports meet — Champions and Runners-up trophies",
+      "img": "/images/photos/award-swift-champions.jpg"
+    }
   ],
-
   "stages": [
     {
       "title": "Early Years Foundation",
@@ -225,8 +345,16 @@
       "alt": "Early years students in the classroom",
       "text": "Our Play-based learning curriculum focuses on cognitive, sensory, and motor development. By engaging in thematic story-circles, structured outdoor games, and interactive digital sandboxes, children build crucial confidence and language foundations.",
       "cards": [
-        { "tag": "Pre-K", "title": "Sensory Play", "text": "Interactive texture modules and rhythm training." },
-        { "tag": "Kindergarten", "title": "Pre-Numeracy", "text": "Play-based math concepts and letter shapes." }
+        {
+          "tag": "Pre-K",
+          "title": "Sensory Play",
+          "text": "Interactive texture modules and rhythm training."
+        },
+        {
+          "tag": "Kindergarten",
+          "title": "Pre-Numeracy",
+          "text": "Play-based math concepts and letter shapes."
+        }
       ]
     },
     {
@@ -235,8 +363,16 @@
       "alt": "Primary students in animal masks for a classroom activity",
       "text": "We introduce students to an inquiry-led pathway through the Karnataka State Education Board syllabus that triggers independent thinking. Math, Science, and Social Studies are presented through hands-on collaborative activities, instilling lifelong research habits and robust literacy.",
       "cards": [
-        { "tag": "Grades 1-2", "title": "Core Literacy", "text": "Bilingual immersion and basic scientific models." },
-        { "tag": "Grades 3-4", "title": "Problem Solving", "text": "Introductory robotics and critical text analysis." }
+        {
+          "tag": "Grades 1-2",
+          "title": "Core Literacy",
+          "text": "Bilingual immersion and basic scientific models."
+        },
+        {
+          "tag": "Grades 3-4",
+          "title": "Problem Solving",
+          "text": "Introductory robotics and critical text analysis."
+        }
       ]
     },
     {
@@ -245,8 +381,16 @@
       "alt": "Middle school students working at their desks",
       "text": "Transitioning towards formal scientific principles, analytical arithmetic, and deep historical insights. Middle school prepares students with dedicated physics, chemistry and biology laboratories, computer lab sessions, and structured public speaking training.",
       "cards": [
-        { "tag": "Grades 5-6", "title": "Lab Sciences", "text": "Formal physics, chemistry, and biology lab modules." },
-        { "tag": "Grade 7", "title": "Civic Leadership", "text": "Historical analysis and youth parliament mock sessions." }
+        {
+          "tag": "Grades 5-6",
+          "title": "Lab Sciences",
+          "text": "Formal physics, chemistry, and biology lab modules."
+        },
+        {
+          "tag": "Grade 7",
+          "title": "Civic Leadership",
+          "text": "Historical analysis and youth parliament mock sessions."
+        }
       ]
     },
     {
@@ -255,12 +399,19 @@
       "alt": "High school students with their teachers",
       "text": "Focused strictly on comprehensive board-exam alignment alongside holistic global mentorship. We maintain premium standards of counseling, supporting admissions to world-class higher secondary institutions and universities.",
       "cards": [
-        { "tag": "Grades 8-9", "title": "Conceptual Clarity", "text": "Intense curriculum rigor across mathematics and computer science." },
-        { "tag": "Grade 10", "title": "Board Mastery", "text": "Continuous mocks, personalized feedback loops, and career counseling." }
+        {
+          "tag": "Grades 8-9",
+          "title": "Conceptual Clarity",
+          "text": "Intense curriculum rigor across mathematics and computer science."
+        },
+        {
+          "tag": "Grade 10",
+          "title": "Board Mastery",
+          "text": "Continuous mocks, personalized feedback loops, and career counseling."
+        }
       ]
     }
   ],
-
   "facilities": [
     {
       "title": "Sports & Physical Development",
@@ -296,7 +447,6 @@
       "text": ""
     }
   ],
-
   "chapters": [
     {
       "title": "1950 · Tamil Nadu → Mangalore",
@@ -335,60 +485,377 @@
       "alt": "Students and staff gathered in the courtyard today"
     }
   ],
-
   "gallery": [
-    { "src": "/images/photos/gal-0061.jpg", "title": "One School, One Family", "caption": "Students and staff gathered together in the central courtyard.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0068.jpg", "title": "March-Past", "caption": "House contingents march with their flags across the courtyard.", "cat": "Events", "span": "tall" },
-    { "src": "/images/photos/gal-0062.jpg", "title": "Independence Day Parade", "caption": "The student council leads the parade under the tricolour bunting.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0035.jpg", "title": "Human Pyramid", "caption": "Students build a human pyramid on the main stage.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0025.jpg", "title": "Dance Performance", "caption": "A group dance on the turf during the celebrations.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0052.jpg", "title": "School Band", "caption": "The drummers of the school band in full uniform.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0059.jpg", "title": "Investiture Ceremony", "caption": "The newly invested student council with the Principal.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0011.jpg", "title": "Taking Office", "caption": "A student leader receives the sash at the investiture ceremony.", "cat": "Events", "span": "tall" },
-    { "src": "/images/photos/gal-0040.jpg", "title": "UKG Graduation Day", "caption": "Celebrating our youngest graduates.", "cat": "Events", "span": "tall" },
-    { "src": "/images/photos/gal-0003.jpg", "title": "Festive Dress-Up", "caption": "Our little ones dressed up for the festival celebrations.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0042.jpg", "title": "Cultural Day", "caption": "Children in traditional costume on the lawn.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0063.jpg", "title": "Onam Pookalam", "caption": "A floral pookalam welcomes everyone at the entrance.", "cat": "Events", "span": "tall" },
-    { "src": "/images/photos/gal-0071.jpg", "title": "Independence Day", "caption": "Students with flags under the tricolour drapes.", "cat": "Events", "span": "tall" },
-    { "src": "/images/photos/gal-0065.jpg", "title": "Independence Day Display", "caption": "A paper-craft display board made by our students.", "cat": "Academics", "span": "mid" },
-    { "src": "/images/photos/gal-0045.jpg", "title": "Our Teachers", "caption": "The ICS teaching team on the main stage.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0044.jpg", "title": "On Stage", "caption": "Students perform at the school assembly.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0077.jpg", "title": "Educational Field Trip", "caption": "Happiness is going on an educational field trip.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0094.jpg", "title": "Parent Interaction", "caption": "Parents and teachers meet in the courtyard.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0020.jpg", "title": "Festival of Lights", "caption": "Diyas and decorations for the Deepavali celebrations.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0083.jpg", "title": "Exhibition Day", "caption": "Students present their projects to the school.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0075.jpg", "title": "Prize Distribution", "caption": "Proud winners with their certificates on stage.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0076.jpg", "title": "Teacher Recognition", "caption": "Our teachers honoured for their dedication.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0037.jpg", "title": "Edu India Expo 2026", "caption": "The school receives the India Top School Award 2026.", "cat": "Events", "span": "mid" },
-    { "src": "/images/photos/gal-0085.jpg", "title": "Back to School", "caption": "A bright welcome for the new academic year.", "cat": "Events", "span": "short" },
-    { "src": "/images/photos/gal-0053.jpg", "title": "In the Classroom", "caption": "A focused lesson in one of our classrooms.", "cat": "Academics", "span": "short" },
-    { "src": "/images/photos/gal-0048.jpg", "title": "Art Class", "caption": "Students at work on their drawings.", "cat": "Academics", "span": "mid" },
-    { "src": "/images/photos/gal-0084.jpg", "title": "Learning by Doing", "caption": "A hands-on activity with the class teacher.", "cat": "Academics", "span": "mid" },
-    { "src": "/images/photos/gal-0091.jpg", "title": "Animal Masks", "caption": "Role play with handmade animal masks.", "cat": "Academics", "span": "short" },
-    { "src": "/images/photos/gal-0088.jpg", "title": "Environment Day", "caption": "Posters made by students for World Environment Day.", "cat": "Academics", "span": "mid" },
-    { "src": "/images/photos/gal-0093.jpg", "title": "Language Class", "caption": "Students with their teacher at the blackboard.", "cat": "Academics", "span": "short" },
-    { "src": "/images/photos/gal-0097.jpg", "title": "Little Learners", "caption": "Friends at their desks in the early years classroom.", "cat": "Academics", "span": "tall" },
-    { "src": "/images/photos/gal-0092.jpg", "title": "Curious Minds", "caption": "Wonder is where learning begins.", "cat": "Academics", "span": "short" },
-    { "src": "/images/photos/gal-0096.jpg", "title": "Listening to the Sea", "caption": "Exploring sound with a seashell in science class.", "cat": "Academics", "span": "tall" },
-    { "src": "/images/photos/gal-0105.jpg", "title": "Earth Day Art", "caption": "Save Earth artwork from across the grades.", "cat": "Academics", "span": "tall" },
-    { "src": "/images/photos/gal-0098.jpg", "title": "Happy Earth Day", "caption": "A student's Earth Day drawing.", "cat": "Academics", "span": "short" },
-    { "src": "/images/photos/gal-0030.jpg", "title": "Young Artists", "caption": "Pre-primary children show off their drawings.", "cat": "Academics", "span": "tall" },
-    { "src": "/images/photos/gal-0043.jpg", "title": "Workshop Session", "caption": "Students attend a workshop in the hall.", "cat": "Academics", "span": "mid" },
-    { "src": "/images/photos/gal-0028.jpg", "title": "Guidance Session", "caption": "A talk with students on well-being.", "cat": "Academics", "span": "tall" },
-    { "src": "/images/photos/gal-0087.jpg", "title": "Planting Saplings", "caption": "Students plant a sapling together.", "cat": "Campus", "span": "short" },
-    { "src": "/images/photos/gal-0064.jpg", "title": "The Library", "caption": "Bookshelves lining the school library.", "cat": "Campus", "span": "tall" },
-    { "src": "/images/photos/gal-0081.jpg", "title": "Colouring Time", "caption": "Young learners busy with crayons.", "cat": "Academics", "span": "short" },
-    { "src": "/images/photos/gal-0106.jpg", "title": "Yoga Session", "caption": "Students practise yoga on the school turf.", "cat": "Sports", "span": "mid" },
-    { "src": "/images/photos/gal-0100.jpg", "title": "Yoga on the Turf", "caption": "The whole school stretches together.", "cat": "Sports", "span": "short" },
-    { "src": "/images/photos/gal-0104.jpg", "title": "Mass PT Drill", "caption": "A coordinated PT display in the courtyard.", "cat": "Sports", "span": "mid" },
-    { "src": "/images/photos/gal-0101.jpg", "title": "Morning Drill", "caption": "Houses line up for the morning drill.", "cat": "Sports", "span": "short" },
-    { "src": "/images/photos/gal-0056.jpg", "title": "Karate Achievers", "caption": "Our karate students with their certificates.", "cat": "Sports", "span": "short" },
-    { "src": "/images/photos/gal-0067.jpg", "title": "Sports Assembly", "caption": "Students gather on the turf for the sports assembly.", "cat": "Sports", "span": "mid" },
-    { "src": "/images/photos/gal-0078.jpg", "title": "On the Field", "caption": "Teams line up on the turf.", "cat": "Sports", "span": "short" },
-    { "src": "/images/photos/gal-0086.jpg", "title": "Play Time", "caption": "Ready for a game in the garden.", "cat": "Sports", "span": "short" },
-    { "src": "/images/photos/gal-0054.jpg", "title": "The Main Stage", "caption": "The open-air stage at the heart of the campus.", "cat": "Campus", "span": "short" },
-    { "src": "/images/photos/gal-0051.jpg", "title": "Our Courtyard", "caption": "The green courtyard framed by the school blocks.", "cat": "Campus", "span": "mid" },
-    { "src": "/images/photos/gal-0079.jpg", "title": "Under the Trees", "caption": "The whole school seated on the turf beneath the old trees.", "cat": "Campus", "span": "short" },
-    { "src": "/images/photos/gal-ganesha.jpg", "title": "Heritage Carving", "caption": "A hand-carved wooden Ganesha on campus.", "cat": "Campus", "span": "tall" }
+    {
+      "src": "/images/photos/gal-0061.jpg",
+      "title": "One School, One Family",
+      "caption": "Students and staff gathered together in the central courtyard.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0068.jpg",
+      "title": "March-Past",
+      "caption": "House contingents march with their flags across the courtyard.",
+      "cat": "Events",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0062.jpg",
+      "title": "Independence Day Parade",
+      "caption": "The student council leads the parade under the tricolour bunting.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0035.jpg",
+      "title": "Human Pyramid",
+      "caption": "Students build a human pyramid on the main stage.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0025.jpg",
+      "title": "Dance Performance",
+      "caption": "A group dance on the turf during the celebrations.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0052.jpg",
+      "title": "School Band",
+      "caption": "The drummers of the school band in full uniform.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0059.jpg",
+      "title": "Investiture Ceremony",
+      "caption": "The newly invested student council with the Principal.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0011.jpg",
+      "title": "Taking Office",
+      "caption": "A student leader receives the sash at the investiture ceremony.",
+      "cat": "Events",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0040.jpg",
+      "title": "UKG Graduation Day",
+      "caption": "Celebrating our youngest graduates.",
+      "cat": "Events",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0003.jpg",
+      "title": "Festive Dress-Up",
+      "caption": "Our little ones dressed up for the festival celebrations.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0042.jpg",
+      "title": "Cultural Day",
+      "caption": "Children in traditional costume on the lawn.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0063.jpg",
+      "title": "Onam Pookalam",
+      "caption": "A floral pookalam welcomes everyone at the entrance.",
+      "cat": "Events",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0071.jpg",
+      "title": "Independence Day",
+      "caption": "Students with flags under the tricolour drapes.",
+      "cat": "Events",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0065.jpg",
+      "title": "Independence Day Display",
+      "caption": "A paper-craft display board made by our students.",
+      "cat": "Academics",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0045.jpg",
+      "title": "Our Teachers",
+      "caption": "The ICS teaching team on the main stage.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0044.jpg",
+      "title": "On Stage",
+      "caption": "Students perform at the school assembly.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0077.jpg",
+      "title": "Educational Field Trip",
+      "caption": "Happiness is going on an educational field trip.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0094.jpg",
+      "title": "Parent Interaction",
+      "caption": "Parents and teachers meet in the courtyard.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0020.jpg",
+      "title": "Festival of Lights",
+      "caption": "Diyas and decorations for the Deepavali celebrations.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0083.jpg",
+      "title": "Exhibition Day",
+      "caption": "Students present their projects to the school.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0075.jpg",
+      "title": "Prize Distribution",
+      "caption": "Proud winners with their certificates on stage.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0076.jpg",
+      "title": "Teacher Recognition",
+      "caption": "Our teachers honoured for their dedication.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0037.jpg",
+      "title": "Edu India Expo 2026",
+      "caption": "The school receives the India Top School Award 2026.",
+      "cat": "Events",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0085.jpg",
+      "title": "Back to School",
+      "caption": "A bright welcome for the new academic year.",
+      "cat": "Events",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0053.jpg",
+      "title": "In the Classroom",
+      "caption": "A focused lesson in one of our classrooms.",
+      "cat": "Academics",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0048.jpg",
+      "title": "Art Class",
+      "caption": "Students at work on their drawings.",
+      "cat": "Academics",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0084.jpg",
+      "title": "Learning by Doing",
+      "caption": "A hands-on activity with the class teacher.",
+      "cat": "Academics",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0091.jpg",
+      "title": "Animal Masks",
+      "caption": "Role play with handmade animal masks.",
+      "cat": "Academics",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0088.jpg",
+      "title": "Environment Day",
+      "caption": "Posters made by students for World Environment Day.",
+      "cat": "Academics",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0093.jpg",
+      "title": "Language Class",
+      "caption": "Students with their teacher at the blackboard.",
+      "cat": "Academics",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0097.jpg",
+      "title": "Little Learners",
+      "caption": "Friends at their desks in the early years classroom.",
+      "cat": "Academics",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0092.jpg",
+      "title": "Curious Minds",
+      "caption": "Wonder is where learning begins.",
+      "cat": "Academics",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0096.jpg",
+      "title": "Listening to the Sea",
+      "caption": "Exploring sound with a seashell in science class.",
+      "cat": "Academics",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0105.jpg",
+      "title": "Earth Day Art",
+      "caption": "Save Earth artwork from across the grades.",
+      "cat": "Academics",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0098.jpg",
+      "title": "Happy Earth Day",
+      "caption": "A student's Earth Day drawing.",
+      "cat": "Academics",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0030.jpg",
+      "title": "Young Artists",
+      "caption": "Pre-primary children show off their drawings.",
+      "cat": "Academics",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0043.jpg",
+      "title": "Workshop Session",
+      "caption": "Students attend a workshop in the hall.",
+      "cat": "Academics",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0028.jpg",
+      "title": "Guidance Session",
+      "caption": "A talk with students on well-being.",
+      "cat": "Academics",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0087.jpg",
+      "title": "Planting Saplings",
+      "caption": "Students plant a sapling together.",
+      "cat": "Campus",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0064.jpg",
+      "title": "The Library",
+      "caption": "Bookshelves lining the school library.",
+      "cat": "Campus",
+      "span": "tall"
+    },
+    {
+      "src": "/images/photos/gal-0081.jpg",
+      "title": "Colouring Time",
+      "caption": "Young learners busy with crayons.",
+      "cat": "Academics",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0106.jpg",
+      "title": "Yoga Session",
+      "caption": "Students practise yoga on the school turf.",
+      "cat": "Sports",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0100.jpg",
+      "title": "Yoga on the Turf",
+      "caption": "The whole school stretches together.",
+      "cat": "Sports",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0104.jpg",
+      "title": "Mass PT Drill",
+      "caption": "A coordinated PT display in the courtyard.",
+      "cat": "Sports",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0101.jpg",
+      "title": "Morning Drill",
+      "caption": "Houses line up for the morning drill.",
+      "cat": "Sports",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0056.jpg",
+      "title": "Karate Achievers",
+      "caption": "Our karate students with their certificates.",
+      "cat": "Sports",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0067.jpg",
+      "title": "Sports Assembly",
+      "caption": "Students gather on the turf for the sports assembly.",
+      "cat": "Sports",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0078.jpg",
+      "title": "On the Field",
+      "caption": "Teams line up on the turf.",
+      "cat": "Sports",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0086.jpg",
+      "title": "Play Time",
+      "caption": "Ready for a game in the garden.",
+      "cat": "Sports",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0054.jpg",
+      "title": "The Main Stage",
+      "caption": "The open-air stage at the heart of the campus.",
+      "cat": "Campus",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-0051.jpg",
+      "title": "Our Courtyard",
+      "caption": "The green courtyard framed by the school blocks.",
+      "cat": "Campus",
+      "span": "mid"
+    },
+    {
+      "src": "/images/photos/gal-0079.jpg",
+      "title": "Under the Trees",
+      "caption": "The whole school seated on the turf beneath the old trees.",
+      "cat": "Campus",
+      "span": "short"
+    },
+    {
+      "src": "/images/photos/gal-ganesha.jpg",
+      "title": "Heritage Carving",
+      "caption": "A hand-carved wooden Ganesha on campus.",
+      "cat": "Campus",
+      "span": "tall"
+    }
   ]
 }

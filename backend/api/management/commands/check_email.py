@@ -15,7 +15,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
 
-from api.notifications import BREVO_URL, recipients
+from api.notifications import BREVO_URL, brevo_config, recipients
 
 
 class Command(BaseCommand):
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         pw = settings.EMAIL_HOST_PASSWORD
         to = [opts["to"]] if opts["to"] else recipients()
 
-        if settings.BREVO_API_KEY:
+        if brevo_config()[0]:
             return self.check_brevo(to)
 
         self.stdout.write("Current configuration")
@@ -109,8 +109,9 @@ class Command(BaseCommand):
             self.stdout.write(bad("\nsend_mail reported 0 messages sent."))
 
     def check_brevo(self, to):
-        self.stdout.write("Brevo API is configured (BREVO_API_KEY is set)")
-        self.stdout.write(f"  Sender     : {settings.DEFAULT_FROM_EMAIL}")
+        api_key, sender = brevo_config()
+        self.stdout.write("Brevo API is configured")
+        self.stdout.write(f"  Sender     : {sender}")
         self.stdout.write(f"  Recipients : {', '.join(to) if to else '(empty)'}")
         if not to:
             self.stdout.write(self.style.ERROR(
@@ -119,8 +120,7 @@ class Command(BaseCommand):
         res = requests.post(
             BREVO_URL,
             json={
-                "sender": {"email": settings.DEFAULT_FROM_EMAIL,
-                           "name": settings.EMAIL_SENDER_NAME},
+                "sender": {"email": sender, "name": settings.EMAIL_SENDER_NAME},
                 "to": [{"email": e} for e in to],
                 "subject": "[ICS website] Test email",
                 "textContent": "This is a test from the ICS website backend.
@@ -128,7 +128,7 @@ class Command(BaseCommand):
 "
                                "If you can read this, form notifications will arrive here.",
             },
-            headers={"api-key": settings.BREVO_API_KEY, "accept": "application/json"},
+            headers={"api-key": api_key, "accept": "application/json"},
             timeout=10,
         )
         if res.ok:

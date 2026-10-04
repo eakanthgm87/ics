@@ -19,6 +19,31 @@ export function ScrollToTop() {
   return null;
 }
 
+/**
+ * Touch swipe → onLeft / onRight. Spread the result onto an element:
+ *   <div {...useSwipe(next, prev)}>
+ * Only clearly horizontal swipes count, so vertical scrolling is untouched.
+ */
+export function useSwipe(onLeft, onRight, threshold = 50) {
+  const start = useRef(null);
+  return {
+    onTouchStart: (e) => {
+      const t = e.touches[0];
+      start.current = { x: t.clientX, y: t.clientY };
+    },
+    onTouchEnd: (e) => {
+      if (!start.current) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - start.current.x;
+      const dy = t.clientY - start.current.y;
+      start.current = null;
+      if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        (dx < 0 ? onLeft : onRight)();
+      }
+    },
+  };
+}
+
 /** Fades a section in the first time it enters the viewport. */
 export function Reveal({ as: Tag = "div", className = "", children, ...rest }) {
   const ref = useRef(null);
@@ -137,6 +162,72 @@ export function CountUp({
   );
 }
 
+/**
+ * Admin-edited text with a little structure. Blocks are separated by a
+ * blank line; inside a block "### " starts a sub-heading, "- " a bullet and
+ * "  - " a nested bullet. Everything else is a paragraph.
+ */
+export function RichText({ text = "" }) {
+  const out = [];
+  let list = null;
+  const flush = () => {
+    if (list) out.push(list);
+    list = null;
+  };
+  text.split("\n").forEach((raw, i) => {
+    const line = raw.trimEnd();
+    if (/^\s{2,}- /.test(line) && list) {
+      const last = list.items[list.items.length - 1];
+      last.sub.push(line.trim().slice(2));
+    } else if (line.startsWith("- ")) {
+      list ??= { type: "ul", key: i, items: [] };
+      list.items.push({ text: line.slice(2), sub: [] });
+    } else {
+      flush();
+      if (line.startsWith("### ")) out.push({ type: "h3", key: i, text: line.slice(4) });
+      else if (line.trim()) out.push({ type: "p", key: i, text: line.trim() });
+    }
+  });
+  flush();
+
+  return (
+    <div className="flex flex-col gap-4">
+      {out.map((b) =>
+        b.type === "h3" ? (
+          <h3 key={b.key} className="mt-2 font-poppins text-lg font-bold text-ink">
+            {b.text}
+          </h3>
+        ) : b.type === "ul" ? (
+          <ul key={b.key} className="flex flex-col gap-2.5">
+            {b.items.map((it) => (
+              <li key={it.text} className="copy-justify flex gap-3 font-arsenal text-[15px] leading-[1.65] text-body">
+                <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+                <span>
+                  {it.text}
+                  {it.sub.length ? (
+                    <ul className="mt-2 flex flex-col gap-1.5 pl-1">
+                      {it.sub.map((s) => (
+                        <li key={s} className="flex gap-2.5">
+                          <span className="mt-[9px] h-1 w-2.5 shrink-0 rounded-full bg-chip" />
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p key={b.key} className="copy-justify font-arsenal text-[15px] leading-[1.7] text-body">
+            {b.text}
+          </p>
+        )
+      )}
+    </div>
+  );
+}
+
 /** Section heading block used on About / Academics / Life at ICS. */
 export function SectionTitle({ eyebrow, title, align = "center", className = "" }) {
   return (
@@ -193,6 +284,9 @@ export function DoodleLayer() {
  * The dashed-frame hero used on Home, Gallery, Life at ICS, Admissions
  * and Contact: background artwork with the copy laid over it.
  */
+const BADGE =
+  "rounded-full bg-black px-4 py-2 font-poppins text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_20px_-6px_rgba(0,0,0,0.6)] ring-1 ring-white/20 [text-shadow:none] sm:text-xs";
+
 export function HeroBanner({
   image,
   badge,
@@ -216,16 +310,21 @@ export function HeroBanner({
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover"
         />
+        {/* scrim: dark enough that white text reads on even a bright photo */}
         <div
-          className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/35 to-ink/25"
+          className={[
+            "absolute inset-0",
+            align === "center"
+              ? "bg-black/55"
+              : "bg-gradient-to-t from-black/85 via-black/50 to-black/20 sm:bg-gradient-to-r sm:from-black/80 sm:via-black/45 sm:to-black/10",
+          ].join(" ")}
           aria-hidden="true"
         />
+        <div className="absolute inset-0 bg-ink/20 mix-blend-multiply" aria-hidden="true" />
 
-        {badge ? (
-          <span className="absolute left-5 top-5 rounded-full bg-white/15 px-3 py-1.5 font-poppins text-[10px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur sm:left-8 sm:top-8 sm:text-[11px]">
-            {badge}
-          </span>
-        ) : null}
+        {/* tablets and up: pinned top-left; phones get it in the text column
+            below so it can never sit on top of the heading */}
+        {badge ? <span className={`${BADGE} absolute left-8 top-8 hidden sm:inline-block`}>{badge}</span> : null}
 
         {seal ? (
           <span className="absolute right-5 top-5 hidden h-16 w-16 items-center justify-center rounded-full border border-white/50 bg-ink/70 text-center font-poppins text-[10px] font-bold leading-tight text-white sm:right-8 sm:top-8 sm:flex">
@@ -237,13 +336,15 @@ export function HeroBanner({
 
         <div
           className={[
-            "relative flex w-full flex-col gap-4 px-6 pb-6 pt-20 sm:px-10 sm:pb-10 sm:pt-24 lg:p-12",
+            "relative flex w-full flex-col gap-4 px-5 pb-6 pt-6 sm:px-10 sm:pb-10 sm:pt-24 lg:px-12 lg:pb-12",
+            "[text-shadow:0_2px_14px_rgba(0,0,0,0.45)]",
             align === "center" ? "items-center" : "items-start",
           ].join(" ")}
         >
+          {badge ? <span className={`${BADGE} w-fit sm:hidden`}>{badge}</span> : null}
           <h1
             className={[
-              "font-poppins font-bold leading-[1.1] text-white",
+              "break-words font-poppins font-bold leading-[1.1] text-white",
               align === "center"
                 ? "text-[26px] sm:text-[38px] lg:text-[48px]"
                 : "text-[28px] sm:text-[40px] lg:text-[56px]",
@@ -254,7 +355,7 @@ export function HeroBanner({
           {text ? (
             <p
               className={[
-                "font-arsenal text-sm leading-relaxed text-white/90 sm:text-base",
+                "font-arsenal text-sm leading-relaxed text-white sm:text-base",
                 align === "center" ? "max-w-[720px]" : "max-w-[640px]",
               ].join(" ")}
             >

@@ -37,7 +37,7 @@ export default function Academics() {
           key={stage.title}
           className="bg-white py-12 lg:py-16"
         >
-          <div className="shell grid items-center gap-10 lg:grid-cols-[540px_minmax(0,1fr)] lg:gap-16">
+          <div className="shell grid items-center gap-10 lg:grid-cols-2 xl:grid-cols-[540px_minmax(0,1fr)] lg:gap-16">
             <Reveal
               className={[
                 "framed h-[280px] w-full sm:h-[380px]",
@@ -61,7 +61,7 @@ export default function Academics() {
               <h2 className="font-poppins text-[26px] font-bold sm:text-[32px]">
                 {stage.title}
               </h2>
-              <p className="font-arsenal text-sm leading-[1.6] text-body">
+              <p className="copy-justify font-arsenal text-sm leading-[1.6] text-body">
                 {stage.text}
               </p>
               <div className="grid w-full gap-4 sm:grid-cols-2">

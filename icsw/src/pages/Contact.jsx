@@ -146,14 +146,14 @@ export default function Contact() {
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-ink/10 text-ink">
                     <Icon />
                   </span>
-                  <span className="flex flex-col gap-1">
+                  <span className="flex min-w-0 flex-col gap-1">
                     <span className="font-poppins text-xs font-bold uppercase tracking-wide text-muted">
                       {label}
                     </span>
                     {href ? (
                       <a
                         href={href}
-                        className="font-poppins text-[15px] font-bold text-ink transition-colors hover:text-brand"
+                        className="break-all font-poppins text-[15px] font-bold text-ink transition-colors hover:text-brand sm:break-normal"
                       >
                         {value}
                       </a>

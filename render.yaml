@@ -44,16 +44,17 @@ services:
         value: "True"
       - key: PYTHON_VERSION
         value: "3.12.7"
-      # These need PUBLIC https:// URLs, which do not exist until the
-      # services are created. `sync: false` makes Render prompt for them at
-      # deploy time. (Do NOT use fromService/hostport here: that returns a
-      # PRIVATE network address like "ics-backend:10000", which a browser
-      # cannot reach and which CORS will reject for having no scheme.)
-      #
-      #   PUBLIC_BASE_URL       https://ics-backend.onrender.com
+      # The frontend's PUBLIC https:// URL, which does not exist until the
+      # service is created, so `sync: false` makes Render prompt for it.
+      # Render may add a suffix when a name is taken (ics-frontend-xxxx), so
+      # copy the real URL from the dashboard, e.g.
       #   CORS_ALLOWED_ORIGINS  https://ics-frontend.onrender.com
-      - key: PUBLIC_BASE_URL
-        sync: false
+      # (Do NOT use fromService/hostport: that returns a PRIVATE address like
+      # "ics-backend:10000", which CORS rejects for having no scheme.)
+      #
+      # PUBLIC_BASE_URL (the backend's own URL, used in photo links) is not
+      # needed: the backend reads RENDER_EXTERNAL_URL, which Render sets to
+      # the real address automatically. Only set it to override that.
       - key: CORS_ALLOWED_ORIGINS
         sync: false
       # Set these in the dashboard after the first deploy (they are secrets):

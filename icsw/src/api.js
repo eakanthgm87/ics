@@ -67,13 +67,25 @@ export function useContent(path, fallback) {
  * Any field left blank in the admin keeps the built-in text.
  */
 export function useSection(key) {
-  const all = useContent("/sections/", CONTENT.sections);
-  const base = CONTENT.sections[key] ?? {};
-  const live = all[key] ?? {};
-  const out = { ...base };
-  for (const [k, v] of Object.entries(live)) if (v) out[k] = v;
-  return out;
+  return useSections([key])[0];
 }
+
+/** Several sections at once, in the order given. */
+export function useSections(keys) {
+  const all = useContent("/sections/", CONTENT.sections);
+  return keys.map((key) => {
+    const out = { ...CONTENT.sections[key] };
+    for (const [k, v] of Object.entries(all[key] ?? {})) if (v) out[k] = v;
+    // "{year}" in any field becomes the current academic year, e.g. 2026-27
+    for (const [k, v] of Object.entries(out)) {
+      if (typeof v === "string") out[k] = v.replaceAll("{year}", ACADEMIC_YEAR);
+    }
+    return out;
+  });
+}
+
+const Y = new Date().getFullYear();
+export const ACADEMIC_YEAR = `${Y}-${String((Y + 1) % 100).padStart(2, "0")}`;
 
 /** Contact details + social links from /admin → Site settings. */
 export function useSchool() {

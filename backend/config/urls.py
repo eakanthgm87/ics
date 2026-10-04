@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.views.generic import RedirectView
 from django.views.static import serve
 
 admin.site.site_header = "Indiranagar Cambridge School"
@@ -8,6 +9,8 @@ admin.site.site_title = "ICS admin"
 admin.site.index_title = "Website content & submissions"
 
 urlpatterns = [
+    # the backend has no homepage; send anyone who opens it to the admin
+    path("", RedirectView.as_view(url="/admin/")),
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
     # Uploaded media, in DEBUG *and* production. Django's static() helper is a

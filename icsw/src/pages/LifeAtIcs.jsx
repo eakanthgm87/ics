@@ -23,7 +23,7 @@ export default function LifeAtIcs() {
       {/* every other section swaps photo and copy sides */}
       {FACILITIES.map((f, i) => (
         <section key={f.title} className="bg-white py-12 lg:py-16">
-          <div className="shell grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_620px] lg:gap-16">
+          <div className="shell grid items-center gap-10 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_620px] lg:gap-16">
             <div
               className={[
                 "flex flex-col items-start gap-6",
@@ -37,7 +37,7 @@ export default function LifeAtIcs() {
                 </h2>
               </div>
               {paragraphs(f.text).map((p) => (
-                <p key={p} className="font-arsenal text-base leading-[1.6] text-body">
+                <p key={p} className="copy-justify font-arsenal text-base leading-[1.6] text-body">
                   {p}
                 </p>
               ))}

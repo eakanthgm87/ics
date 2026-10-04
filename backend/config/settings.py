@@ -119,9 +119,13 @@ STORAGES = {
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Absolute URL prefix handed to the frontend for uploaded files.
-# Set this on Render to your backend's public URL.
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").rstrip("/")
+# Absolute URL prefix handed to the frontend for uploaded files. Optional on
+# Render: it injects RENDER_EXTERNAL_URL (the service's real public URL, e.g.
+# https://ics-backend-hrod.onrender.com), which is used when this is unset.
+# A wrong value here makes every photo on the site point at the wrong server.
+PUBLIC_BASE_URL = (
+    os.getenv("PUBLIC_BASE_URL") or os.getenv("RENDER_EXTERNAL_URL", "")
+).rstrip("/")
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024  # 6 MB; forms cap files at 5 MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024

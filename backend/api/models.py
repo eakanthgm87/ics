@@ -407,6 +407,7 @@ class SiteSettings(TimeStamped):
     instagram = models.URLField(max_length=200, blank=True)
     youtube = models.URLField(max_length=200, blank=True)
     linkedin = models.URLField(max_length=200, blank=True)
+    twitter = models.URLField("X (Twitter)", max_length=200, blank=True)
     whatsapp = models.URLField(max_length=200, blank=True)
 
     notify_emails = models.CharField(
@@ -415,6 +416,20 @@ class SiteSettings(TimeStamped):
         blank=True,
         help_text="Admission and contact form submissions are emailed here. "
         "Separate several addresses with commas.",
+    )
+    brevo_api_key = models.CharField(
+        "Brevo API key",
+        max_length=200,
+        blank=True,
+        help_text="From brevo.com → SMTP & API → API Keys. Leave blank to keep the "
+        "saved key (or to use the BREVO_API_KEY server setting).",
+    )
+    email_sender = models.EmailField(
+        "Send emails from",
+        max_length=120,
+        blank=True,
+        help_text="Must be a sender verified in Brevo (Senders, Domains & "
+        "Dedicated IPs → Senders). Blank uses the DEFAULT_FROM_EMAIL server setting.",
     )
     # bumped by `manage.py seed` when the built-in content changes
     content_version = models.PositiveIntegerField(default=0, editable=False)

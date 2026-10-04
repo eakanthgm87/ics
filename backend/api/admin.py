@@ -7,7 +7,8 @@ training. Submissions are read-only apart from the status/notes columns the
 office needs to work through them.
 """
 
-from django.contrib import admin
+from django import forms
+from django.contrib import admin, messages
 from django.utils.html import format_html
 
 from .models import (
@@ -294,14 +295,31 @@ class BrochureAdmin(admin.ModelAdmin):
         return format_html('<a href="{}" target="_blank">Download</a>', obj.file.url)
 
 
+class SiteSettingsForm(forms.ModelForm):
+    class Meta:
+        model = SiteSettings
+        fields = "__all__"
+        # the key is a secret: never echo it back into the page
+        widgets = {"brevo_api_key": forms.PasswordInput(render_value=False)}
+
+    def clean_brevo_api_key(self):
+        # a blank box means "keep the saved key", not "delete it"
+        return self.cleaned_data["brevo_api_key"].strip() or self.instance.brevo_api_key
+
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
+    form = SiteSettingsForm
+    list_display = ("__str__", "notify_emails", "brevo_status")
+    actions = ["send_test_email"]
+    readonly_fields = ("brevo_status",)
     fieldsets = (
         ("School", {"fields": ("name", "address", "maps_url")}),
         ("Contact", {"fields": ("phone", "mobile", "email", "email_hr")}),
         ("Office hours", {"fields": ("hours_week", "hours_sat")}),
         ("Social profiles", {
-            "fields": ("facebook", "instagram", "youtube", "linkedin", "whatsapp"),
+            "fields": ("facebook", "instagram", "youtube", "twitter", "linkedin",
+                       "whatsapp"),
             "description": "Leave blank to hide that icon in the footer.",
         }),
         ("Form notifications", {
@@ -309,7 +327,37 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             "description": "Every admission and contact form submission is "
                            "emailed to these addresses.",
         }),
+        ("Email service (Brevo)", {
+            "fields": ("brevo_status", "brevo_api_key", "email_sender"),
+            "description": "To check the setup, go back to the Site settings "
+                           "list, tick the row and run “Send a test email”.",
+        }),
     )
+
+    @admin.display(description="Brevo")
+    def brevo_status(self, obj):
+        from django.conf import settings as conf
+        if obj.brevo_api_key:
+            return f"Key saved (…{obj.brevo_api_key[-4:]})"
+        if conf.BREVO_API_KEY:
+            return "Using the BREVO_API_KEY server setting"
+        return "Not set — emails are not sent through Brevo"
+
+    @admin.action(description="Send a test email to the notification addresses")
+    def send_test_email(self, request, queryset):
+        from .notifications import recipients, send_email
+        to = ", ".join(recipients()) or "nobody"
+        if send_email(
+            "[ICS website] Test email",
+            "This is a test from the ICS website admin.\n\n"
+            "If you can read this, form notifications will arrive here.",
+        ):
+            self.message_user(request, f"Test email sent to {to}. Check the inbox "
+                                       "(and the spam folder).", messages.SUCCESS)
+        else:
+            self.message_user(request, "Sending failed. Check the Brevo key, that "
+                                       "the sender address is verified in Brevo, "
+                                       "and the server log for details.", messages.ERROR)
 
     def has_add_permission(self, request):
         # single row; edit the existing one

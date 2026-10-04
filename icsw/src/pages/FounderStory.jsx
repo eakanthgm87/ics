@@ -74,7 +74,7 @@ export default function FounderStory() {
             <IconChevronDown />
           </span>
 
-          <div className="shell grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_520px] lg:gap-12">
+          <div className="shell grid items-center gap-8 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_520px] lg:gap-12">
             <Reveal
               className={[
                 "framed h-[280px] w-full shadow-[0_14px_32px_-14px_rgba(38,65,48,0.25)] sm:h-[400px] lg:h-[560px]",
@@ -99,7 +99,7 @@ export default function FounderStory() {
               <h2 className="font-poppins text-[26px] font-bold leading-tight sm:text-[32px] lg:text-4xl">
                 {c.title}
               </h2>
-              <p className="font-arsenal text-base leading-[1.6] text-body">
+              <p className="copy-justify font-arsenal text-base leading-[1.6] text-body">
                 {c.text}
               </p>
 

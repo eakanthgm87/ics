@@ -1,7 +1,8 @@
 """
 Outbound notifications for form submissions.
 
-Email goes through Brevo's HTTP API when BREVO_API_KEY is set (HTTPS, so it
+Email goes through Brevo's HTTP API when a Brevo key is set — in /admin →
+Site settings, or the BREVO_API_KEY environment variable (HTTPS, so it
 works on hosts that block SMTP ports, like Render's free tier), otherwise
 through Django's EMAIL_BACKEND. Recipients come from Site settings in /admin,
 falling back to NOTIFY_EMAILS in the environment.
@@ -32,16 +33,23 @@ def recipients():
     return [e.strip() for e in saved.split(",") if e.strip()] or settings.NOTIFY_EMAILS
 
 
+def brevo_config():
+    """(api_key, sender) — /admin → Site settings first, then the environment."""
+    s = SiteSettings.load()
+    return (s.brevo_api_key or settings.BREVO_API_KEY,
+            s.email_sender or settings.DEFAULT_FROM_EMAIL)
+
+
 def send_email(subject, body, reply_to=None):
     to = recipients()
     if not to:
         log.info("No notification address configured; skipping email for %r", subject)
         return False
+    api_key, sender = brevo_config()
     try:
-        if settings.BREVO_API_KEY:
+        if api_key:
             payload = {
-                "sender": {"email": settings.DEFAULT_FROM_EMAIL,
-                           "name": settings.EMAIL_SENDER_NAME},
+                "sender": {"email": sender, "name": settings.EMAIL_SENDER_NAME},
                 "to": [{"email": e} for e in to],
                 "subject": subject,
                 "textContent": body,
@@ -51,13 +59,13 @@ def send_email(subject, body, reply_to=None):
             res = requests.post(
                 BREVO_URL,
                 json=payload,
-                headers={"api-key": settings.BREVO_API_KEY, "accept": "application/json"},
+                headers={"api-key": api_key, "accept": "application/json"},
                 timeout=10,
             )
             res.raise_for_status()
         else:
             EmailMessage(
-                subject, body, settings.DEFAULT_FROM_EMAIL, to,
+                subject, body, sender, to,
                 reply_to=[reply_to] if reply_to else None,
             ).send()
         return True

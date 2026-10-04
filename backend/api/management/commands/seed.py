@@ -26,6 +26,7 @@ from django.db import transaction
 from api.models import (
     AcademicStage,
     Award,
+    Brochure,
     Chapter,
     Facility,
     GalleryImage,
@@ -37,7 +38,7 @@ from api.models import (
     StageCard,
 )
 
-CONTENT_VERSION = 2
+CONTENT_VERSION = 3
 
 FRONTEND = Path(__file__).resolve().parents[4] / "icsw"
 CONTENT = FRONTEND / "src" / "data" / "content.json"
@@ -71,6 +72,12 @@ class Command(BaseCommand):
                 self.load(data)
                 self.load_settings(settings)
             self.stdout.write(self.style.SUCCESS(f"Seeded content version {CONTENT_VERSION}."))
+        if not Brochure.objects.exists():
+            # the PDF shipped with the site, so /api/brochure/ and the admin
+            # list are never empty; staff upload a newer one to replace it
+            brochure = Brochure.objects.create(title="School Brochure", is_active=True)
+            attach(brochure, "file", "/ICS-Brochure.pdf")
+            self.stdout.write("brochure     : bundled PDF registered")
         self.restore_missing()
 
     def restore_missing(self):
@@ -80,10 +87,10 @@ class Command(BaseCommand):
         any file that came from icsw/public. (Files staff uploaded themselves
         cannot be recovered this way; they need persistent storage.)
         """
-        bundled = {p.name: p for p in (FRONTEND / "public" / "images").rglob("*") if p.is_file()}
+        bundled = {p.name: p for p in (FRONTEND / "public").rglob("*") if p.is_file()}
         fields = [(PageSection, "image"), (GalleryImage, "image"), (Person, "photo"),
                   (Award, "image"), (Facility, "image"), (AcademicStage, "image"),
-                  (Chapter, "image")]
+                  (Chapter, "image"), (Brochure, "file")]
         restored = missing = 0
         for model, name in fields:
             for obj in model.objects.exclude(**{name: ""}):
@@ -183,6 +190,12 @@ class Command(BaseCommand):
         s.hours_sat = "Sat: 9:00 AM to 12:30 PM"
         s.maps_url = "https://maps.app.goo.gl/pdQwJhK4u2YYb8Lv6"
         s.facebook = s.facebook or "https://www.facebook.com/p/The-Indiranagar-cambridge-school-100066308185320/"
+        # platform homepages are placeholders until staff enter the
+        # school's own profile URLs in /admin -> Site settings
+        s.instagram = s.instagram or "https://www.instagram.com/"
+        s.youtube = s.youtube or "https://www.youtube.com/"
+        s.twitter = s.twitter or "https://x.com/"
+        s.linkedin = s.linkedin or "https://www.linkedin.com/"
         s.whatsapp = "https://wa.me/919902076777"
         s.notify_emails = s.notify_emails or "indiranagarcambridgeschool@gmail.com"
         s.content_version = CONTENT_VERSION

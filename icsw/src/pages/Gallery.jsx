@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { HeroBanner } from "../components/common";
+import { HeroBanner, useSwipe } from "../components/common";
 import { useContent, useSection } from "../api";
 import CONTENT from "../data/content.json";
 import {
@@ -11,11 +11,56 @@ import {
 
 const TABS = ["All", "Sports", "Academics", "Events", "Campus"];
 
-const spanClass = {
-  tall: "h-[320px] sm:h-[460px]",
-  mid: "h-[260px] sm:h-[340px]",
-  short: "h-[220px] sm:h-[240px]",
-};
+/* Masonry on a grid of equal rows: "tall" tiles take two rows, the rest one.
+   Each photo goes into the shortest column (so there are never holes), then
+   short columns are evened up by letting their last one-row tiles grow —
+   the gallery always ends as a clean rectangle. Returns each photo's
+   { col, row, span }, in the photos' own order. */
+function layout(photos, cols) {
+  const columns = Array.from({ length: cols }, () => []);
+  const height = Array(cols).fill(0);
+  photos.forEach((p, i) => {
+    const c = height.indexOf(Math.min(...height));
+    const span = p.span === "tall" ? 2 : 1;
+    columns[c].push({ i, span });
+    height[c] += span;
+  });
+  const max = Math.max(...height);
+  columns.forEach((col, c) => {
+    for (let k = col.length - 1; k >= 0 && height[c] < max; k--) {
+      if (col[k].span === 1) {
+        col[k].span = 2;
+        height[c]++;
+      }
+    }
+    // no one-row tiles left to grow (e.g. a column of tall ones): stretch the last
+    if (col.length && height[c] < max) col.at(-1).span += max - height[c];
+  });
+  const out = [];
+  columns.forEach((col, c) => {
+    let row = 1;
+    for (const t of col) {
+      out[t.i] = { col: c + 1, row, span: t.span };
+      row += t.span;
+    }
+  });
+  return out;
+}
+
+/* matches the grid's breakpoints: 1 / sm 2 / lg 3 / xl 4 columns */
+function useColumns() {
+  const get = () => {
+    const w = typeof window === "undefined" ? 1280 : window.innerWidth;
+    return w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 640 ? 2 : 1;
+  };
+  const [cols, setCols] = useState(get);
+  useEffect(() => {
+    const on = () => setCols(get());
+    window.addEventListener("resize", on);
+    return () => window.removeEventListener("resize", on);
+  }, []);
+  return cols;
+}
 
 /* the circled X from the design spec */
 function CloseGlyph() {
@@ -39,6 +84,8 @@ function CloseGlyph() {
 }
 
 function Lightbox({ photo, onClose, onPrev, onNext }) {
+  // swipe left for the next photo, right for the previous one
+  const swipe = useSwipe(onNext, onPrev);
   const [copied, setCopied] = useState(false);
   const shareUrl =
     typeof window === "undefined" ? "" : `${window.location.origin}/gallery`;
@@ -88,6 +135,7 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
 
       <div
         onClick={(e) => e.stopPropagation()}
+        {...swipe}
         className="flex w-full max-w-[1080px] shrink-0 flex-col overflow-hidden bg-white shadow-[0_32px_64px_0_rgba(0,0,0,0.45)] motion-safe:animate-[lb-pop_.3s_cubic-bezier(0.16,1,0.3,1)] lg:h-[640px] lg:flex-row lg:items-start"
       >
         <img
@@ -172,6 +220,8 @@ export default function Gallery() {
     () => (tab === "All" ? PHOTOS : PHOTOS.filter((p) => p.cat === tab)),
     [tab, PHOTOS]
   );
+  const cols = useColumns();
+  const place = useMemo(() => layout(visible, cols), [visible, cols]);
 
   const count = visible.length;
   const step = useCallback(
@@ -212,7 +262,7 @@ export default function Gallery() {
 
       {/* ------------------------------------------------------ filter tabs */}
       <section className="bg-white pb-8">
-        <div className="shell flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+        <div className="shell flex items-center gap-6 overflow-x-auto [scrollbar-width:none] sm:justify-center sm:gap-8 [&>button]:shrink-0">
           {TABS.map((t) => (
             <button
               key={t}
@@ -243,17 +293,23 @@ export default function Gallery() {
               No photographs in this category yet.
             </p>
           ) : (
-            <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4 [column-fill:_balance]">
+            <div
+              className="grid auto-rows-[220px] gap-4 lg:auto-rows-[240px]"
+              style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+            >
               {visible.map((p, i) => (
                 <button
                   type="button"
                   key={p.src + p.title}
                   onClick={() => setLightbox(i)}
+                  style={{
+                    gridColumn: place[i].col,
+                    gridRow: `${place[i].row} / span ${place[i].span}`,
+                  }}
                   className={[
-                    "group relative mb-4 block w-full break-inside-avoid overflow-hidden text-left",
+                    "group relative block h-full w-full overflow-hidden rounded-xl text-left",
                     "transition-[transform,box-shadow] duration-500 ease-out",
                     "hover:z-10 hover:-translate-y-1 hover:shadow-[0_24px_40px_-16px_rgba(38,65,48,0.55)]",
-                    spanClass[p.span],
                   ].join(" ")}
                   aria-label={`Open ${p.title}`}
                 >
