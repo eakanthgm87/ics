@@ -41,6 +41,17 @@ const DOCUMENTS = [
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NAME_RE = /^[A-Za-z][A-Za-z\s.'-]*$/;          // letters, spaces, . ' -
+/* Autofill hints. The student's own details are "off": a phone would
+   otherwise fill in the parent's name, which is the wrong person. */
+const AUTOCOMPLETE = {
+  phone: "tel",
+  email: "email",
+  guardianName: "name",
+  guardianEmail: "email",
+  residentialAddress: "street-address",
+  nationality: "country-name",
+};
+
 const WORDS_RE = /^[A-Za-z][A-Za-z\s./'&-]*$/;       // free text, no digits
 const MAX_FILE = 5 * 1024 * 1024;
 
@@ -160,7 +171,7 @@ function UploadBox({ label, file, onPick, error }) {
           <IconUpload />
         </span>
         <span className="font-poppins text-sm font-bold text-ink">{label}</span>
-        <span className="font-arsenal text-xs text-muted">
+        <span className="font-poppins text-xs text-muted">
           {file ? file.name : "Upload PDF, PNG, JPG up to 5MB"}
         </span>
       </button>
@@ -184,7 +195,7 @@ function UploadBox({ label, file, onPick, error }) {
         </button>
       ) : null}
       {error ? (
-        <p className="text-center font-arsenal text-xs text-red-600">{error}</p>
+        <p className="text-center font-poppins text-xs text-red-600">{error}</p>
       ) : null}
     </div>
   );
@@ -310,7 +321,7 @@ export default function Admissions() {
                     <span className="font-poppins text-sm font-bold text-ink">
                       {s.title}
                     </span>
-                    <span className="font-arsenal text-[13px] text-muted">
+                    <span className="font-poppins text-[13px] text-muted">
                       {s.text}
                     </span>
                   </span>
@@ -324,7 +335,7 @@ export default function Admissions() {
             style={{ transitionDelay: "90ms" }}
           >
             <h2 className="font-poppins text-xl font-bold">Required Documents</h2>
-            <p className="font-arsenal text-sm text-muted">
+            <p className="font-poppins text-sm text-muted">
               Please ensure you have scanned copies of these documents ready before
               filling out the registration structure.
             </p>
@@ -334,7 +345,7 @@ export default function Admissions() {
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl bg-ink/10 text-ink">
                     <IconCheck />
                   </span>
-                  <span className="font-arsenal text-sm text-ink">{d}</span>
+                  <span className="font-poppins text-sm text-ink">{d}</span>
                 </li>
               ))}
             </ul>
@@ -388,6 +399,8 @@ export default function Admissions() {
                         id={f.name}
                         name={f.name}
                         type={f.type || "text"}
+                        autoComplete={AUTOCOMPLETE[f.name] ?? "off"}
+                        inputMode={f.type === "tel" ? "tel" : f.type === "email" ? "email" : undefined}
                         placeholder={f.placeholder}
                         value={values[f.name]}
                         onChange={(e) => set(f.name, e.target.value)}
@@ -397,7 +410,7 @@ export default function Admissions() {
                     )}
 
                     {errors[f.name] ? (
-                      <p className="font-arsenal text-xs text-red-600">
+                      <p className="font-poppins text-xs text-red-600">
                         {errors[f.name]}
                       </p>
                     ) : null}
@@ -456,7 +469,7 @@ export default function Admissions() {
                 {errors.form ? (
                   <p
                     role="alert"
-                    className="w-full rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-center font-arsenal text-sm text-red-700"
+                    className="w-full rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-center font-poppins text-sm text-red-700"
                   >
                     {errors.form}
                   </p>
@@ -491,7 +504,7 @@ export default function Admissions() {
                       <p className="w-fit font-poppins text-lg font-bold text-ink">
                         Registration Pre-Approved
                       </p>
-                      <p className="w-full font-arsenal text-sm text-body">
+                      <p className="w-full font-poppins text-sm text-body">
                         Your form metadata passes automated initial criteria. Our
                         admissions manager will contact you in 48 hours for the
                         physical document audit.

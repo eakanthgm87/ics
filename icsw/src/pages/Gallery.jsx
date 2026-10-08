@@ -3,7 +3,9 @@ import { HeroBanner, useSwipe } from "../components/common";
 import { useContent, useSection } from "../api";
 import CONTENT from "../data/content.json";
 import {
+  IconCheck,
   IconChevronLeft,
+  IconClose,
   IconChevronRight,
   IconShare,
   SocialIcon,
@@ -62,34 +64,14 @@ function useColumns() {
   return cols;
 }
 
-/* the circled X from the design spec */
-function CloseGlyph() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M10.0004 5.9998L6.00005 10.0001M6.00005 5.9998L10.0004 10.0001M14.6674 7.99996C14.6674 11.6822 11.6824 14.6672 8.00021 14.6672C4.31801 14.6672 1.33301 11.6822 1.33301 7.99996C1.33301 4.31777 4.31801 1.33276 8.00021 1.33276C11.6824 1.33276 14.6674 4.31777 14.6674 7.99996Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function Lightbox({ photo, onClose, onPrev, onNext }) {
+function Lightbox({ photo, index, total, onClose, onPrev, onNext }) {
   // swipe left for the next photo, right for the previous one
   const swipe = useSwipe(onNext, onPrev);
   const [copied, setCopied] = useState(false);
   const shareUrl =
     typeof window === "undefined" ? "" : `${window.location.origin}/gallery`;
   const shareText = `${photo.title} — Indiranagar Cambridge School`;
+  const pad = (n) => String(n).padStart(2, "0");
 
   const copyLink = async () => {
     try {
@@ -101,15 +83,18 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
     }
   };
 
+  const round =
+    "flex h-9 w-9 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white";
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={photo.title}
       onClick={onClose}
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[rgba(0,0,0,0.82)] px-4 py-10 backdrop-blur-xl lg:py-20 motion-safe:animate-[lb-fade_.25s_ease-out]"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(8,14,10,0.86)] px-4 py-6 backdrop-blur-xl sm:px-20 motion-safe:animate-[lb-fade_.25s_ease-out]"
     >
-      {/* previous / next sit on the backdrop, clear of the card */}
+      {/* previous / next sit on the backdrop, clear of the photo */}
       <button
         type="button"
         onClick={(e) => {
@@ -117,7 +102,7 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
           onPrev();
         }}
         aria-label="Previous photo"
-        className="absolute left-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/25 sm:left-6"
+        className="absolute left-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-colors hover:bg-white hover:text-ink sm:flex lg:left-6"
       >
         <IconChevronLeft size={22} />
       </button>
@@ -128,84 +113,93 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
           onNext();
         }}
         aria-label="Next photo"
-        className="absolute right-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/25 sm:right-6"
+        className="absolute right-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-colors hover:bg-white hover:text-ink sm:flex lg:right-6"
       >
         <IconChevronRight size={22} />
       </button>
 
-      <div
+      {/* close, in the corner where people look for it */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-colors hover:bg-white hover:text-ink lg:right-6 lg:top-6"
+      >
+        <IconClose size={20} />
+      </button>
+
+      <figure
+        key={photo.src /* replay the entrance when stepping */}
         onClick={(e) => e.stopPropagation()}
         {...swipe}
-        className="flex w-full max-w-[1080px] shrink-0 flex-col overflow-hidden bg-white shadow-[0_32px_64px_0_rgba(0,0,0,0.45)] motion-safe:animate-[lb-pop_.3s_cubic-bezier(0.16,1,0.3,1)] lg:h-[640px] lg:flex-row lg:items-start"
+        // width follows the photo, so the caption lines up with its edges
+        className="flex w-fit max-w-full flex-col motion-safe:animate-[lb-pop_.35s_cubic-bezier(0.16,1,0.3,1)]"
       >
+        {/* the photo at its own shape: no letterbox bars, never too big */}
         <img
           src={photo.src}
           alt={photo.title}
-          className="h-[300px] w-full max-w-none bg-black object-contain sm:h-[420px] lg:h-full lg:min-w-0 lg:flex-1"
+          className="block max-h-[68vh] w-auto max-w-full object-contain shadow-[0_30px_80px_-24px_rgba(0,0,0,0.85)] sm:max-w-[min(980px,calc(100vw-10rem))]"
         />
 
-        <div className="flex w-full shrink-0 flex-col justify-between gap-8 border-line bg-white p-6 sm:p-10 lg:h-full lg:w-[380px] lg:border-l">
-          <div className="flex w-full flex-col items-start gap-6">
-            <div className="flex w-full items-center justify-between">
-              <span className="flex w-fit items-start bg-chip px-3 py-1.5 font-poppins text-[11px] font-bold text-ink">
+        {/* editorial caption: zero-width box so long text never widens the figure */}
+        <figcaption className="@container w-0 min-w-full border-t border-white/15 pt-4 text-white sm:pt-5">
+          {/* side by side only when the caption is wide enough (a tall,
+              narrow photo gives a narrow caption: share then sits below) */}
+          <div className="flex flex-col gap-4 @lg:flex-row @lg:items-start @lg:justify-between @lg:gap-10">
+            <div className="flex min-w-0 flex-col gap-1.5">
+              <p className="font-poppins text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
                 {photo.cat}
+                <span className="mx-2 text-white/30">—</span>
+                <span className="tabular-nums">
+                  {pad(index + 1)} / {pad(total)}
+                </span>
+              </p>
+              <h2 className="font-poppins text-xl font-bold leading-snug text-white sm:text-2xl">
+                {photo.title}
+              </h2>
+              {photo.caption ? (
+                <p className="max-w-[560px] font-poppins text-sm leading-relaxed text-white/70">
+                  {photo.caption}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="flex shrink-0 items-center gap-1 @lg:pt-0.5">
+              <span className="mr-2 font-poppins text-[11px] font-bold uppercase tracking-[0.2em] text-white/45">
+                {copied ? "Link copied" : "Share"}
               </span>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Share on Facebook"
+                className={round}
+              >
+                <SocialIcon name="Facebook" size={17} />
+              </a>
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Share on WhatsApp"
+                className={round}
+              >
+                <SocialIcon name="WhatsApp" size={17} />
+              </a>
               <button
                 type="button"
-                onClick={onClose}
-                aria-label="Close"
-                className="flex h-8 w-8 items-center justify-center bg-tint text-ink transition-colors hover:bg-chip"
+                onClick={copyLink}
+                aria-label={copied ? "Link copied" : "Copy link"}
+                title={copied ? "Link copied" : "Copy link"}
+                className={round}
               >
-                <CloseGlyph />
+                {copied ? <IconCheck size={15} /> : <IconShare size={17} />}
               </button>
             </div>
-
-            <h2 className="w-full font-poppins text-2xl font-bold leading-[1.3em] text-ink">
-              {photo.title}
-            </h2>
-            <p className="w-full font-arsenal text-sm leading-[1.6em] text-body">
-              {photo.caption}
-            </p>
           </div>
-
-          <div className="flex w-full flex-col items-start gap-4">
-            <div className="h-px w-full bg-line" />
-            <div className="flex w-full items-center justify-between">
-              <p className="w-fit font-arsenal text-[13px] text-muted">
-                {copied ? "Link copied" : "Share this moment"}
-              </p>
-              <div className="flex items-center gap-3 text-ink">
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Share on Facebook"
-                  className="transition-colors hover:text-brand"
-                >
-                  <SocialIcon name="Facebook" size={20} />
-                </a>
-                <a
-                  href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Share on WhatsApp"
-                  className="transition-colors hover:text-brand"
-                >
-                  <SocialIcon name="WhatsApp" size={20} />
-                </a>
-                <button
-                  type="button"
-                  onClick={copyLink}
-                  aria-label="Copy link"
-                  className="transition-colors hover:text-brand"
-                >
-                  <IconShare size={20} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </figcaption>
+      </figure>
     </div>
   );
 }
@@ -273,7 +267,7 @@ export default function Gallery() {
               }}
               aria-pressed={tab === t}
               className={[
-                "pb-2 font-poppins text-base transition-colors",
+                "min-h-11 min-w-11 pb-2 pt-2 font-poppins text-base transition-colors",
                 tab === t
                   ? "border-b-[3px] border-ink font-bold text-ink"
                   : "border-b-[3px] border-transparent font-normal text-ink/70 hover:text-ink",
@@ -289,7 +283,7 @@ export default function Gallery() {
       <section className="bg-white pb-16 lg:pb-24">
         <div className="shell">
           {visible.length === 0 ? (
-            <p className="py-20 text-center font-arsenal text-base text-body">
+            <p className="py-20 text-center font-poppins text-base text-body">
               No photographs in this category yet.
             </p>
           ) : (
@@ -344,6 +338,8 @@ export default function Gallery() {
       {active ? (
         <Lightbox
           photo={active}
+          index={lightbox}
+          total={visible.length}
           onClose={() => setLightbox(null)}
           onPrev={() => step(-1)}
           onNext={() => step(1)}

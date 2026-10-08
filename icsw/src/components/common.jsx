@@ -191,16 +191,24 @@ export function RichText({ text = "" }) {
   flush();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       {out.map((b) =>
         b.type === "h3" ? (
           <h3 key={b.key} className="mt-2 font-poppins text-lg font-bold text-ink">
             {b.text}
           </h3>
         ) : b.type === "ul" ? (
-          <ul key={b.key} className="flex flex-col gap-2.5">
+          <ul
+            key={b.key}
+            // a list of short items (games, subjects...) reads better in columns
+            className={
+              b.items.every((it) => it.text.length <= 34 && !it.sub.length)
+                ? "grid gap-x-6 gap-y-2.5 sm:grid-cols-2"
+                : "flex flex-col gap-2.5"
+            }
+          >
             {b.items.map((it) => (
-              <li key={it.text} className="copy-justify flex gap-3 font-arsenal text-[15px] leading-[1.65] text-body">
+              <li key={it.text} className="copy-justify flex gap-3 font-poppins text-[15px] leading-[1.65] text-body">
                 <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                 <span>
                   {it.text}
@@ -219,7 +227,7 @@ export function RichText({ text = "" }) {
             ))}
           </ul>
         ) : (
-          <p key={b.key} className="copy-justify font-arsenal text-[15px] leading-[1.7] text-body">
+          <p key={b.key} className="copy-justify font-poppins text-[15px] leading-[1.7] text-body">
             {b.text}
           </p>
         )
@@ -308,19 +316,13 @@ export function HeroBanner({
           src={image}
           alt=""
           aria-hidden="true"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        {/* scrim: dark enough that white text reads on even a bright photo */}
-        <div
-          className={[
-            "absolute inset-0",
-            align === "center"
-              ? "bg-black/55"
-              : "bg-gradient-to-t from-black/85 via-black/50 to-black/20 sm:bg-gradient-to-r sm:from-black/80 sm:via-black/45 sm:to-black/10",
-          ].join(" ")}
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 bg-ink/20 mix-blend-multiply" aria-hidden="true" />
+        {/* an even slate-grey coat over the whole photo, so white text
+            reads anywhere on it while the picture still shows through */}
+        <div className="absolute inset-0 bg-[#1f2933]/55" aria-hidden="true" />
 
         {/* tablets and up: pinned top-left; phones get it in the text column
             below so it can never sit on top of the heading */}
@@ -337,7 +339,7 @@ export function HeroBanner({
         <div
           className={[
             "relative flex w-full flex-col gap-4 px-5 pb-6 pt-6 sm:px-10 sm:pb-10 sm:pt-24 lg:px-12 lg:pb-12",
-            "[text-shadow:0_2px_14px_rgba(0,0,0,0.45)]",
+            "[&>h1]:[text-shadow:0_2px_14px_rgba(0,0,0,0.45)] [&>p]:[text-shadow:0_1px_10px_rgba(0,0,0,0.5)]",
             align === "center" ? "items-center" : "items-start",
           ].join(" ")}
         >
@@ -355,7 +357,7 @@ export function HeroBanner({
           {text ? (
             <p
               className={[
-                "font-arsenal text-sm leading-relaxed text-white sm:text-base",
+                "font-poppins text-[15px] leading-relaxed text-white sm:text-[17px]",
                 align === "center" ? "max-w-[720px]" : "max-w-[640px]",
               ].join(" ")}
             >

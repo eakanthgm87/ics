@@ -1,6 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import MobileActions from "./components/MobileActions";
 import { ScrollToTop } from "./components/common";
 
 import Home from "./pages/Home";
@@ -21,7 +22,7 @@ function NotFound() {
       <h1 className="font-poppins text-4xl font-bold">
         We couldn&apos;t find that page
       </h1>
-      <p className="max-w-[520px] font-arsenal text-base text-body">
+      <p className="max-w-[520px] font-poppins text-base text-body">
         The page you are looking for may have moved. Head back to the homepage or
         get in touch with the campus office.
       </p>
@@ -59,6 +60,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <MobileActions />
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function SchoolInfo() {
           <h1 className="font-poppins text-[34px] font-bold leading-[1.15] sm:text-[44px] lg:text-[52px]">
             {intro.title}
           </h1>
-          <p className="max-w-[760px] font-arsenal text-base leading-[1.7] text-body">
+          <p className="max-w-[760px] font-poppins text-base leading-[1.7] text-body">
             {intro.body}
           </p>
         </div>

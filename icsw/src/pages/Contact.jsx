@@ -153,7 +153,7 @@ export default function Contact() {
                     {href ? (
                       <a
                         href={href}
-                        className="break-all font-poppins text-[15px] font-bold text-ink transition-colors hover:text-brand sm:break-normal"
+                        className="inline-block break-all py-1.5 font-poppins text-[15px] font-bold text-ink transition-colors hover:text-brand sm:break-normal"
                       >
                         {value}
                       </a>
@@ -227,13 +227,14 @@ export default function Contact() {
                   <input
                     id="name"
                     name="name"
+                    autoComplete="name"
                     className={`field ${errors.name ? "border-red-400" : ""}`}
                     placeholder="e.g. Amit Kumar"
                     value={values.name}
                     onChange={(e) => set("name", e.target.value)}
                   />
                   {errors.name ? (
-                    <p className="font-arsenal text-xs text-red-600">{errors.name}</p>
+                    <p className="font-poppins text-xs text-red-600">{errors.name}</p>
                   ) : null}
                 </div>
 
@@ -245,13 +246,14 @@ export default function Contact() {
                     id="email"
                     name="email"
                     type="email"
+                    autoComplete="email"
                     className={`field ${errors.email ? "border-red-400" : ""}`}
                     placeholder="e.g. amit@email.com"
                     value={values.email}
                     onChange={(e) => set("email", e.target.value)}
                   />
                   {errors.email ? (
-                    <p className="font-arsenal text-xs text-red-600">{errors.email}</p>
+                    <p className="font-poppins text-xs text-red-600">{errors.email}</p>
                   ) : null}
                 </div>
 
@@ -263,13 +265,14 @@ export default function Contact() {
                     id="phone"
                     name="phone"
                     type="tel"
+                    autoComplete="tel"
                     className={`field ${errors.phone ? "border-red-400" : ""}`}
                     placeholder="e.g. +91 99000 12345"
                     value={values.phone}
                     onChange={(e) => set("phone", e.target.value)}
                   />
                   {errors.phone ? (
-                    <p className="font-arsenal text-xs text-red-600">{errors.phone}</p>
+                    <p className="font-poppins text-xs text-red-600">{errors.phone}</p>
                   ) : null}
                 </div>
 
@@ -292,7 +295,7 @@ export default function Contact() {
                     ))}
                   </select>
                   {errors.subject ? (
-                    <p className="font-arsenal text-xs text-red-600">
+                    <p className="font-poppins text-xs text-red-600">
                       {errors.subject}
                     </p>
                   ) : null}
@@ -313,7 +316,7 @@ export default function Contact() {
                   onChange={(e) => set("message", e.target.value)}
                 />
                 {errors.message ? (
-                  <p className="font-arsenal text-xs text-red-600">
+                  <p className="font-poppins text-xs text-red-600">
                     {errors.message}
                   </p>
                 ) : null}
@@ -331,7 +334,7 @@ export default function Contact() {
                 {errors.form ? (
                   <p
                     role="alert"
-                    className="w-full rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-center font-arsenal text-sm text-red-700"
+                    className="w-full rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-center font-poppins text-sm text-red-700"
                   >
                     {errors.form}
                   </p>
@@ -339,7 +342,7 @@ export default function Contact() {
                 {sent ? (
                   <p
                     role="status"
-                    className="flex items-center gap-3 rounded-2xl border border-ink bg-success px-5 py-3 font-arsenal text-sm text-ink"
+                    className="flex items-center gap-3 rounded-2xl border border-ink bg-success px-5 py-3 font-poppins text-sm text-ink"
                   >
                     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-white">
                       <IconCheck />

@@ -21,7 +21,7 @@ export default function Footer() {
                 height="289"
               />
             </Link>
-            <p className="font-arsenal text-sm leading-[1.7] text-white/80">
+            <p className="font-poppins text-sm leading-[1.7] text-white/80">
               {footer.body}
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function Footer() {
               <Link
                 key={l.label}
                 to={l.to}
-                className="font-arsenal text-sm text-white/80 transition-colors hover:text-white"
+                className="font-poppins text-sm text-white/80 transition-colors hover:text-white"
               >
                 {l.label}
               </Link>
@@ -49,16 +49,13 @@ export default function Footer() {
               href={SCHOOL.mapsUrl}
               target="_blank"
               rel="noreferrer"
-              className="font-arsenal text-sm text-white/80 transition-colors hover:text-white"
+              className="font-poppins text-sm text-white/80 transition-colors hover:text-white"
             >
-              {/* leading # in Poppins, slightly smaller — Arsenal's own # is
-                  light and Arsenal only ships at 400 */}
-              <span className="font-poppins text-[0.92em] font-normal text-white">#</span>
-              {SCHOOL.address.replace(/^#/, "")}
+              {SCHOOL.address}
             </a>
             <a
               href={`tel:${SCHOOL.phone.replace(/[^0-9+]/g, "")}`}
-              className="font-arsenal text-sm text-white/80 transition-colors hover:text-white"
+              className="font-poppins text-sm text-white/80 transition-colors hover:text-white"
             >
               Phone: {SCHOOL.phone}
             </a>
@@ -96,20 +93,20 @@ export default function Footer() {
         <div className="h-[5px] w-full rounded-full bg-brand" />
 
         <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-          <p className="font-arsenal text-xs text-white/50">
+          <p className="font-poppins text-xs text-white/50">
             © {new Date().getFullYear()} Indiranagar Cambridge School. All rights
             reserved.
           </p>
           <div className="flex items-start gap-6">
             <Link
               to="/privacy-policy"
-              className="font-arsenal text-xs text-white/50 hover:text-white"
+              className="font-poppins text-xs text-white/50 hover:text-white"
             >
               Privacy Policy
             </Link>
             <Link
               to="/terms"
-              className="font-arsenal text-xs text-white/50 hover:text-white"
+              className="font-poppins text-xs text-white/50 hover:text-white"
             >
               Terms of Service
             </Link>

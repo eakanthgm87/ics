@@ -9,7 +9,7 @@ function StageCard({ tag, title, text }) {
         {tag}
       </span>
       <p className="font-poppins text-xl font-bold text-ink">{title}</p>
-      <p className="font-arsenal text-[13px] text-body">{text}</p>
+      <p className="font-poppins text-[13px] text-body">{text}</p>
     </div>
   );
 }
@@ -26,7 +26,7 @@ export default function Academics() {
           <h1 className="font-poppins text-[34px] font-bold leading-[1.2] sm:text-[42px] lg:text-5xl">
             {intro.title}
           </h1>
-          <p className="max-w-[900px] font-arsenal text-base leading-[1.6] text-body">
+          <p className="max-w-[900px] font-poppins text-base leading-[1.6] text-body">
             {intro.body}
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function Academics() {
               <h2 className="font-poppins text-[26px] font-bold sm:text-[32px]">
                 {stage.title}
               </h2>
-              <p className="copy-justify font-arsenal text-sm leading-[1.6] text-body">
+              <p className="copy-justify font-poppins text-sm leading-[1.6] text-body">
                 {stage.text}
               </p>
               <div className="grid w-full gap-4 sm:grid-cols-2">

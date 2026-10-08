@@ -54,7 +54,7 @@ export default function FounderStory() {
 
             <a
               href="#chapter-1"
-              className="mx-auto flex items-center gap-2 font-poppins text-sm font-bold text-ink transition-colors hover:text-brand"
+              className="mx-auto flex min-h-11 items-center gap-2 px-3 font-poppins text-sm font-bold text-ink transition-colors hover:text-brand"
             >
               Begin the chronicle
               <IconChevronDown size={18} />
@@ -99,7 +99,7 @@ export default function FounderStory() {
               <h2 className="font-poppins text-[26px] font-bold leading-tight sm:text-[32px] lg:text-4xl">
                 {c.title}
               </h2>
-              <p className="copy-justify font-arsenal text-base leading-[1.6] text-body">
+              <p className="copy-justify font-poppins text-base leading-[1.6] text-body">
                 {c.text}
               </p>
 

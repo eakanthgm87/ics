@@ -38,7 +38,7 @@ from api.models import (
     StageCard,
 )
 
-CONTENT_VERSION = 3
+CONTENT_VERSION = 4
 
 FRONTEND = Path(__file__).resolve().parents[4] / "icsw"
 CONTENT = FRONTEND / "src" / "data" / "content.json"

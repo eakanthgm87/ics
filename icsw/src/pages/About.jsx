@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { SectionTitle, useSwipe } from "../components/common";
 import { paragraphs, useContent, useSection } from "../api";
@@ -67,29 +67,24 @@ function PersonModal({ people, index, onIndex, onClose }) {
             alt={person.name}
             className="absolute inset-0 h-full w-full object-cover object-top"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1510]/85 via-transparent to-transparent" />
-          <span className="absolute left-5 top-5 rounded-full bg-black/25 px-3 py-1.5 font-poppins text-[10px] font-bold uppercase tracking-[0.16em] text-white ring-1 ring-white/25 backdrop-blur-md">
-            Our Faculty
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/55 to-transparent" />
+          <span className="absolute bottom-5 left-5 rounded-full bg-white px-3 py-1.5 font-poppins text-xs font-bold tracking-widest text-ink shadow-[0_6px_16px_-6px_rgba(0,0,0,0.4)]">
+            {pad(index + 1)}
+            <span className="text-muted"> / {pad(total)}</span>
           </span>
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 p-6">
-            <span className="h-[3px] w-12 rounded-full bg-brand" />
-            <span className="font-poppins text-sm font-bold tracking-widest text-white">
-              {pad(index + 1)}
-              <span className="text-white/50"> / {pad(total)}</span>
-            </span>
-          </div>
         </div>
 
         {/* ------------------------------------------------- profile side */}
         <div className="flex min-h-0 flex-col">
           <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-6 pb-6 pt-7 sm:px-10 sm:pt-10">
             <div className="flex flex-col gap-2 pr-12">
-              <p className="font-poppins text-xs font-bold uppercase tracking-[0.18em] text-brand">
-                {person.role}
-              </p>
-              <h2 className="font-poppins text-[26px] font-bold leading-[1.15] sm:text-[34px]">
+              <p className="eyebrow">Our Faculty</p>
+              <h2 className="font-poppins text-[26px] font-bold leading-[1.15] sm:text-[32px]">
                 {person.name}
               </h2>
+              <span className="w-fit rounded-full bg-tint px-3 py-1 font-poppins text-xs font-bold text-ink ring-1 ring-ink/10">
+                {person.role}
+              </span>
             </div>
 
             {facts.length ? (
@@ -113,11 +108,11 @@ function PersonModal({ people, index, onIndex, onClose }) {
 
             {lead ? (
               <div className="flex flex-col gap-3">
-                <p className="copy-justify border-l-[3px] border-brand pl-4 font-arsenal text-[17px] leading-[1.65] text-ink">
+                <p className="copy-justify font-poppins text-[16px] leading-[1.7] text-ink">
                   {lead}
                 </p>
                 {rest.map((t) => (
-                  <p key={t} className="copy-justify font-arsenal text-[15px] leading-[1.75] text-body">
+                  <p key={t} className="copy-justify font-poppins text-[15px] leading-[1.75] text-body">
                     {t}
                   </p>
                 ))}
@@ -130,7 +125,7 @@ function PersonModal({ people, index, onIndex, onClose }) {
             <button
               type="button"
               onClick={() => onIndex(at(-1))}
-              className="flex min-w-0 items-center gap-2 font-poppins text-xs font-bold text-ink transition-colors hover:text-brand"
+              className="flex min-w-0 items-center gap-2 rounded-full px-3 py-2 font-poppins text-xs font-bold text-ink transition-colors hover:bg-tint"
             >
               <IconArrowLeft size={16} />
               <span className="truncate">{people[at(-1)].name}</span>
@@ -138,7 +133,7 @@ function PersonModal({ people, index, onIndex, onClose }) {
             <button
               type="button"
               onClick={() => onIndex(at(1))}
-              className="flex min-w-0 items-center gap-2 font-poppins text-xs font-bold text-ink transition-colors hover:text-brand"
+              className="flex min-w-0 items-center gap-2 rounded-full px-3 py-2 font-poppins text-xs font-bold text-ink transition-colors hover:bg-tint"
             >
               <span className="truncate">{people[at(1)].name}</span>
               <IconArrowRight size={16} />
@@ -237,25 +232,30 @@ function FacultyLoop() {
         tabIndex={copy ? -1 : undefined}
         onClick={() => setOpen(i)}
         aria-label={`View profile of ${p.name}`}
-        className="group relative block h-[340px] w-[256px] overflow-hidden rounded-[22px] bg-ink text-left shadow-[0_18px_30px_-16px_rgba(38,65,48,0.45)] ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-[0_28px_40px_-16px_rgba(38,65,48,0.6)]"
+        // fixed size: photo on top, name panel below, so every card matches
+        className="group flex h-[372px] w-[256px] flex-col overflow-hidden rounded-[22px] border border-line bg-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink text-left shadow-[0_14px_28px_-18px_rgba(38,65,48,0.35)] transition-[border-color,box-shadow] duration-500 hover:border-ink/30 hover:shadow-[0_26px_44px_-20px_rgba(38,65,48,0.45)] focus-visible:border-ink/30"
       >
-        <img
-          src={p.img}
-          alt=""
-          loading="lazy"
-          draggable={false}
-          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-        />
-        <span className="absolute inset-0 bg-gradient-to-t from-[#0b1510]/90 via-[#0b1510]/20 via-45% to-transparent" />
-        <span className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
-          <span className="mb-1.5 h-[3px] w-8 rounded-full bg-brand transition-all duration-300 group-hover:w-14" />
-          <span className="line-clamp-2 font-poppins text-[17px] font-bold leading-snug text-white">
-            {p.name}
+        <span className="relative block h-[272px] w-full shrink-0 overflow-hidden bg-tint">
+          <img
+            src={p.img}
+            alt=""
+            loading="lazy"
+            draggable={false}
+            className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          />
+          {/* soft green veil + "View profile" pill rise in on hover */}
+          <span className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
+          <span className="absolute inset-x-0 bottom-4 flex justify-center">
+            <span className="inline-flex translate-y-3 items-center gap-1.5 rounded-full bg-white px-4 py-2 font-poppins text-[11px] font-bold uppercase tracking-[0.12em] text-ink opacity-0 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.45)] transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+              View profile
+              <IconArrowRight size={14} />
+            </span>
           </span>
-          <span className="line-clamp-1 font-poppins text-[12px] text-white/75">{p.role}</span>
-          <span className="mt-2 inline-flex items-center gap-1.5 font-poppins text-[11px] font-bold uppercase tracking-[0.14em] text-white/90">
-            View profile
-            <IconArrowRight size={14} />
+        </span>
+        <span className="flex min-h-0 flex-1 flex-col justify-center gap-1 px-5">
+          <span className="line-clamp-1 font-poppins text-[16px] font-bold text-ink">{p.name}</span>
+          <span className="line-clamp-1 font-poppins text-[12px] text-muted transition-colors duration-500 group-hover:text-ink">
+            {p.role}
           </span>
         </span>
       </button>
@@ -286,99 +286,164 @@ function FacultyLoop() {
   );
 }
 
-/* -------------------------------------------------------- awards carousel */
+/* ------------------------------------------------------- awards track --
+   A scroll-snap track: swipe on touch, drag or shift-wheel with a mouse, or
+   use the arrows. Every card is the same size: the award photo takes most
+   of it, the text stays compact, and a green "year medallion" sits on the
+   seam between the two. */
 function AwardsCarousel() {
   const AWARDS = useContent("/awards/", CONTENT.awards);
-  const [page, setPage] = useState(0);
-  const [perPage, setPerPage] = useState(4);
+  const track = useRef(null);
+  const drag = useRef(null);
+  const [pos, setPos] = useState({ progress: 0, start: true, end: false });
 
-  useEffect(() => {
-    const set = () => {
-      const w = window.innerWidth;
-      setPerPage(w >= 1200 ? 4 : w >= 900 ? 3 : w >= 640 ? 2 : 1);
-    };
-    set();
-    window.addEventListener("resize", set);
-    return () => window.removeEventListener("resize", set);
+  const measure = useCallback(() => {
+    const el = track.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setPos({
+      progress: max > 0 ? el.scrollLeft / max : 1,
+      // snapping can leave a few pixels of slack at either end
+      start: el.scrollLeft <= 8,
+      end: el.scrollLeft >= max - 8,
+    });
   }, []);
 
-  const pages = Math.max(1, Math.ceil(AWARDS.length / perPage));
-  const current = Math.min(page, pages - 1);
-  const shown = AWARDS.slice(current * perPage, current * perPage + perPage);
+  useEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure, AWARDS.length]);
+
+  // one card (plus the gap) per arrow press
+  const step = (dir) => {
+    const el = track.current;
+    const card = el?.querySelector("article");
+    if (el && card) el.scrollBy({ left: dir * (card.offsetWidth + 24), behavior: "smooth" });
+  };
+
+  // mouse drag-to-scroll; touch already scrolls natively
+  const release = () => {
+    if (drag.current?.moved) track.current.style.scrollSnapType = "";
+    drag.current = null;
+  };
+  const mouse = {
+    onPointerDown: (e) => {
+      if (e.pointerType !== "mouse") return;
+      drag.current = { x: e.clientX, left: track.current.scrollLeft, moved: false };
+    },
+    onPointerMove: (e) => {
+      const d = drag.current;
+      if (!d) return;
+      const dx = e.clientX - d.x;
+      if (!d.moved && Math.abs(dx) > 5) {
+        d.moved = true;
+        track.current.style.scrollSnapType = "none"; // snapping fights a drag
+      }
+      if (d.moved) track.current.scrollLeft = d.left - dx;
+    },
+    onPointerUp: release,
+    onPointerLeave: release,
+  };
+
+  const arrow =
+    "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-35";
 
   return (
-    <div className="flex w-full flex-col gap-10">
-      <div
-        className="grid gap-6"
-        style={{ gridTemplateColumns: `repeat(${perPage}, minmax(0, 1fr))` }}
-      >
-        {shown.map((a) => (
-          <article
-            key={a.title + a.year}
-            className="group flex h-[370px] flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-[0_12px_28px_-14px_rgba(38,65,48,0.2)] transition-[transform,box-shadow] duration-500 hover:-translate-y-1.5 hover:shadow-[0_28px_48px_-20px_rgba(38,65,48,0.4)]"
-          >
-            {/* plaques, trophies and certificates come in every shape: each
-                sits whole and centred in an identical frame, over a blurred,
-                enlarged copy of itself so no frame ever looks empty */}
-            <div className="relative h-[220px] shrink-0 overflow-hidden bg-ink">
-              <img
-                src={a.img}
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl"
-                loading="lazy"
-              />
-              <span className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-              <img
-                src={a.img}
-                alt={a.title}
-                className="relative h-full w-full object-contain p-5 drop-shadow-[0_14px_20px_rgba(0,0,0,0.45)] transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-                loading="lazy"
-              />
-              <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 font-poppins text-xs font-bold text-brand shadow-sm backdrop-blur">
-                {a.year}
+    <div className="flex w-full flex-col gap-2">
+      <div className="relative">
+        {/* soft fades hint that the row continues */}
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-white to-transparent transition-opacity duration-300 sm:w-8 ${pos.start ? "opacity-0" : "opacity-100"}`}
+        />
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-white to-transparent transition-opacity duration-300 sm:w-8 ${pos.end ? "opacity-0" : "opacity-100"}`}
+        />
+
+        <div
+          ref={track}
+          onScroll={measure}
+          {...mouse}
+          role="region"
+          aria-label="Awards and honours"
+          tabIndex={0}
+          className="flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto px-1 pb-14 pt-4 outline-none select-none [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+        >
+          {AWARDS.map((a, i) => (
+            <article
+              key={a.title + a.year}
+              className="group relative flex h-[392px] w-[272px] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-[0_14px_30px_-20px_rgba(38,65,48,0.35)] transition-[translate,box-shadow,border-color] duration-500 ease-out hover:-translate-y-2 hover:border-ink/20 hover:shadow-[0_22px_36px_-20px_rgba(38,65,48,0.5)] sm:w-[292px]"
+            >
+              {/* the award, whole and centred over a blurred copy of itself */}
+              <div className="relative h-[282px] shrink-0 overflow-hidden bg-ink">
+                <img
+                  src={a.img}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full scale-125 object-cover opacity-60 blur-2xl"
+                />
+                <span className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/45" />
+                <img
+                  src={a.img}
+                  alt={a.title}
+                  draggable={false}
+                  loading="lazy"
+                  className="relative h-full w-full object-contain p-6 pb-10 drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)] transition-transform duration-700 ease-out group-hover:scale-[1.07]"
+                />
+                <span className="absolute left-4 top-4 rounded-full bg-black/35 px-2.5 py-1 font-poppins text-[10px] font-bold tracking-[0.18em] text-white ring-1 ring-white/20">
+                  No. {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
+
+              {/* year medallion on the seam */}
+              <span className="absolute right-5 top-[282px] z-10 flex h-[62px] w-[62px] -translate-y-1/2 flex-col items-center justify-center rounded-full bg-ink text-center font-poppins leading-none text-white shadow-[0_10px_22px_-8px_rgba(38,65,48,0.7)] ring-4 ring-white transition-transform duration-500 group-hover:scale-110">
+                <IconAward size={15} />
+                <span className="mt-1 px-1 text-[9px] font-bold tracking-wide">{a.year}</span>
               </span>
-            </div>
-            <div className="flex min-h-0 flex-1 flex-col items-start gap-2 px-5 py-4">
-              <span className="h-[3px] w-8 rounded-full bg-brand transition-all duration-500 group-hover:w-14" />
-              <h3 className="line-clamp-2 font-poppins text-base font-bold leading-snug">
-                {a.title}
-              </h3>
-              <p className="line-clamp-3 subhead text-[13px] leading-relaxed text-body">{a.body}</p>
-            </div>
-          </article>
-        ))}
+
+              <div className="flex min-h-0 flex-1 flex-col justify-center gap-1 pl-5 pr-[92px]">
+                <h3 className="line-clamp-2 font-poppins text-[15px] font-bold leading-snug text-ink">
+                  {a.title}
+                </h3>
+                <p className="line-clamp-2 font-poppins text-[12px] leading-relaxed text-muted transition-colors duration-500 group-hover:text-body">
+                  {a.body}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4 sm:gap-5">
         <button
           type="button"
-          onClick={() => setPage((p) => (p - 1 + pages) % pages)}
+          onClick={() => step(-1)}
+          disabled={pos.start}
           aria-label="Previous awards"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-line bg-white text-ink shadow-[0_4px_12px_-4px_rgba(38,65,48,0.2)] transition-colors hover:bg-tint"
+          className={`${arrow} border-line bg-white text-ink enabled:hover:border-ink enabled:hover:bg-ink enabled:hover:text-white`}
         >
           <IconArrowLeft size={20} />
         </button>
-        <div className="flex items-center gap-2.5">
-          {Array.from({ length: pages }).map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setPage(i)}
-              aria-label={`Awards page ${i + 1}`}
-              aria-current={i === current}
-              className={[
-                "rounded-full transition-all duration-300",
-                i === current ? "h-2.5 w-2.5 bg-ink" : "h-2 w-2 bg-ink/25 hover:bg-ink/50",
-              ].join(" ")}
-            />
-          ))}
+        {/* progress through the collection */}
+        <div className="relative h-1 flex-1 overflow-hidden rounded-full bg-line">
+          <span
+            className="absolute inset-y-0 left-0 rounded-full bg-ink transition-[width] duration-200"
+            style={{ width: `${Math.max(8, pos.progress * 100)}%` }}
+          />
         </div>
+        <span className="hidden font-poppins text-xs font-bold tabular-nums text-muted sm:block">
+          {AWARDS.length} awards
+        </span>
         <button
           type="button"
-          onClick={() => setPage((p) => (p + 1) % pages)}
+          onClick={() => step(1)}
+          disabled={pos.end}
           aria-label="Next awards"
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-white shadow-[0_4px_12px_-4px_rgba(38,65,48,0.3)] transition-colors hover:bg-[#1b3123]"
+          className={`${arrow} border-ink bg-ink text-white enabled:hover:bg-[#1b3123]`}
         >
           <IconArrowRight size={20} />
         </button>
@@ -392,7 +457,7 @@ function Intro({ section }) {
   return (
     <div className="flex max-w-[860px] flex-col items-center gap-4 text-center">
       {paragraphs(section.body).map((p) => (
-        <p key={p} className="font-arsenal text-base leading-[1.7] text-body">
+        <p key={p} className="font-poppins text-base leading-[1.7] text-body">
           {p}
         </p>
       ))}
@@ -422,8 +487,8 @@ export default function About() {
           Copy on the left, framed photograph on the right. The "1979"
           watermark sits behind the heading, its left edge flush with the
           eyebrow, heading and body below it. */}
-      <section className="overflow-hidden bg-white py-12 lg:py-20">
-        <div className="shell grid items-center gap-12 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)] lg:gap-20">
+      <section className="overflow-x-clip bg-white py-12 lg:py-20">
+        <div className="shell grid items-start gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14 xl:gap-20">
           <div className="relative flex flex-col items-start gap-8">
             <span
               aria-hidden="true"
@@ -438,7 +503,7 @@ export default function About() {
                 {school.title}
               </h1>
               {paragraphs(school.body).map((p) => (
-                <p key={p} className="copy-justify max-w-[620px] font-arsenal text-base leading-[1.7] text-body">
+                <p key={p} className="copy-justify font-poppins text-base leading-[1.75] text-body">
                   {p}
                 </p>
               ))}
@@ -448,11 +513,11 @@ export default function About() {
             </Link>
           </div>
 
-          <div className="framed w-full">
+          <div className="framed w-full lg:sticky lg:top-28 lg:-mt-10">
             <img
               src={school.img}
               alt="The Indiranagar Cambridge School campus"
-              className="h-[340px] w-full rounded-2xl object-cover sm:h-[460px]"
+              className="h-[340px] w-full rounded-2xl object-cover sm:h-[460px] lg:aspect-[4/5] lg:h-auto"
             />
           </div>
         </div>
@@ -460,12 +525,12 @@ export default function About() {
 
       {/* ------------------------------------------------------ the founder */}
       <section className="bg-white py-12 lg:py-20">
-        <div className="shell grid items-start gap-12 lg:grid-cols-2 xl:grid-cols-[minmax(0,480px)_minmax(0,1fr)] lg:gap-20">
+        <div className="shell grid items-start gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 xl:gap-20">
           <div className="relative w-full lg:sticky lg:top-28">
             <img
               src={founder.img}
               alt={founder.eyebrow}
-              className="h-[380px] w-full rounded-2xl object-cover sm:h-[520px]"
+              className="h-[380px] w-full rounded-2xl object-cover object-top sm:h-[520px] lg:aspect-[4/5] lg:h-auto"
             />
             <span className="absolute -right-4 top-8 flex h-20 w-20 items-center justify-center rounded-full bg-ink p-1 shadow-[0_8px_20px_-8px_rgba(38,65,48,0.5)]">
               <span className="flex h-full w-full items-center justify-center rounded-full border border-dashed border-white font-poppins text-[10px] font-bold uppercase tracking-wider text-white">
@@ -482,7 +547,7 @@ export default function About() {
               {founder.title}
             </h2>
             {paragraphs(founder.body).map((p) => (
-              <p key={p} className="copy-justify mt-2 font-arsenal text-base leading-[1.7] text-body">
+              <p key={p} className="copy-justify mt-2 font-poppins text-base leading-[1.75] text-body">
                 {p}
               </p>
             ))}
@@ -498,7 +563,7 @@ export default function About() {
       {/* ---------------------------------------------------- the principal
           Mirror of the founder row: copy left, portrait right. */}
       <section className="bg-white py-12 lg:py-20">
-        <div className="shell grid items-start gap-12 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-20">
+        <div className="shell grid items-start gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14 xl:gap-20">
           <div className="flex flex-col items-start gap-3">
             <p className="font-poppins text-[26px] font-bold uppercase leading-tight text-muted lg:text-[34px]">
               {principal.eyebrow}
@@ -510,7 +575,7 @@ export default function About() {
               <p className="subhead text-lg text-ink">{principal.subtitle}</p>
             ) : null}
             {paragraphs(principal.body).map((p) => (
-              <p key={p} className="copy-justify mt-3 font-arsenal text-base leading-[1.7] text-body">
+              <p key={p} className="copy-justify mt-3 font-poppins text-base leading-[1.75] text-body">
                 {p}
               </p>
             ))}
@@ -524,7 +589,7 @@ export default function About() {
           <img
             src={principal.img}
             alt={`${principal.eyebrow}, Principal`}
-            className="h-[380px] w-full rounded-2xl object-cover object-top sm:h-[520px] lg:sticky lg:top-28"
+            className="h-[380px] w-full rounded-2xl object-cover object-top sm:h-[520px] lg:sticky lg:top-28 lg:aspect-[4/5] lg:h-auto"
           />
         </div>
       </section>
@@ -562,7 +627,7 @@ export default function About() {
                 <div className="relative flex w-full flex-col gap-3">
                   <h3 className="font-poppins text-2xl font-bold">{s.title}</h3>
                 </div>
-                <p className="relative font-arsenal text-base leading-[1.7] text-body">
+                <p className="relative font-poppins text-base leading-[1.7] text-body">
                   {s.body}
                 </p>
               </div>

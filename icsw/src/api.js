@@ -101,7 +101,13 @@ export function useSchool() {
     hoursWeek: s.hours_week,
     hoursSat: s.hours_sat,
     mapsUrl: s.maps_url,
-    socials: s.socials,
+    // a WhatsApp link saved without a number would open WhatsApp with
+    // nobody to message: rebuild it from the school's mobile number
+    socials: s.socials.map((x) =>
+      x.name === "WhatsApp" && !/\d{6,}/.test(x.href) && s.mobile
+        ? { ...x, href: `https://wa.me/${s.mobile.replace(/\D/g, "")}` }
+        : x
+    ),
   };
 }
 
